@@ -16,52 +16,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 
-console.log("POST JS STARTED");
+// Keep post.js production-stable: avoid noisy global error logging.
+// (Errors will still surface via the app's own try/catch.)
 
-// Global diagnostics so we never miss the real reason behind “hangs”
-window.addEventListener("unhandledrejection", (event) => {
-  console.error("[post.js] unhandledrejection:", {
-    reason: event?.reason,
-    message: event?.reason?.message || null,
-    stack: event?.reason?.stack || null
-  });
-});
-
-window.addEventListener("error", (event) => {
-  console.error("[post.js] error event:", {
-    message: event?.message,
-    filename: event?.filename,
-    lineno: event?.lineno,
-    colno: event?.colno,
-    error: event?.error
-  });
-});
-
-function logFirebaseWriteMeta({ label = "write-meta" } = {}) {
-  try {
-    console.log(`[post.js] ${label}`, {
-      appCount: auth?.app ? (auth?.app ? 1 : 0) : null,
-      projectIdFromAuth: auth?.app?.options?.projectId || null,
-      projectIdFromDb: db?.app?.options?.projectId || null,
-      authReady: !!auth,
-      currentUser: auth?.currentUser ? { uid: auth.currentUser.uid, email: auth.currentUser.email } : null,
-      db: {
-        type: typeof db,
-        appName: db?.app?.name || null
-      }
-    });
-  } catch (e) {
-    console.warn("[post.js] logFirebaseWriteMeta failed", e);
-  }
+function watchdog(_name, _ms = 10000) {
+  // No-op watchdog in production build.
+  return () => {};
 }
 
-
-function watchdog(name, ms = 10000) {
-  const id = setTimeout(() => {
-    console.error(`WATCHDOG: ${name} still pending after ${ms}ms`);
-  }, ms);
-  return () => clearTimeout(id);
-}
 
 function formatMaybe(v) {
   try {
@@ -83,6 +45,7 @@ function setStatus(message) {
   const statusEl = document.getElementById("status");
   if (statusEl) statusEl.innerText = message;
 }
+
 
 function isPlainObject(v) {
   return Object.prototype.toString.call(v) === "[object Object]";
@@ -128,11 +91,7 @@ async function getCurrentUserOrWait({ timeoutMs = 10000 } = {}) {
     try {
       let unsubscribe = null;
       unsubscribe = onAuthStateChanged(auth, (user) => {
-        console.log("Auth state changed (gate):", {
-          hasUser: !!user,
-          uid: user?.uid || null,
-          email: user?.email || null
-        });
+
         try {
           unsubscribe?.();
         } catch {}
@@ -250,7 +209,8 @@ const init = () => {
     const submitBtn = form.querySelector("button[type=\"submit\"], button.btn[type=\"submit\"]");
 
     try {
-      console.log("POST submit: start");
+// console.log("POST submit: start");
+
       setStatus("Preparing...");
 
       // Read inputs once (avoid race conditions with async)

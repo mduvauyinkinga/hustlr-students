@@ -2,8 +2,6 @@ import { db } from "./firebase.js";
 
 import { collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Public services listing
-
 const servicesContainer = document.getElementById("servicesContainer");
 const searchInput = document.getElementById("searchInput");
 const categoryFilter = document.getElementById("categoryFilter");
@@ -50,7 +48,6 @@ async function loadServices() {
 
       const matchesSearch =
         !q || title.toLowerCase().includes(q) || description.toLowerCase().includes(q);
-
       if (!matchesSearch) return;
 
       items.push({ id: docSnap.id, ...data });
@@ -71,7 +68,9 @@ async function loadServices() {
     for (const item of items) {
       const card = document.createElement("div");
       card.className = "card";
+
       const imageUrl = item.imageUrl ? String(item.imageUrl) : "";
+
       card.innerHTML = `
         ${imageUrl ? `<img class="service-image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy" />` : ""}
         <h3>${escapeHtml(item.title)}</h3>
@@ -82,6 +81,7 @@ async function loadServices() {
           <button class="btn" onclick="requestService(${JSON.stringify(item.title)})">Request</button>
         </div>
       `;
+
       servicesContainer.appendChild(card);
     }
   } catch (err) {
