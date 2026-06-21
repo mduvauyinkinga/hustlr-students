@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
+
+  <title>Dashboard - HUSTLR</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- NAV -->
+
+  <nav>
+    <div class="brand">
+      <img class="brand-logo" src="assets/hustlr-logo.png" alt="HUSTLR Logo">
+      <h1>HUSTLR</h1>
+    </div>
+
+    <div>
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="post.html">Post</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html">Login</a>
+    </div>
+
+  </nav>
+
+  <!-- HEADER -->
+
+  <section class="container">
+
+    <h2>My Dashboard</h2>
+
+    <p id="welcomeText">Checking authentication...</p>
+
+    <br>
+
+    <button class="btn" id="logoutBtn" style="display:none;">
+      Logout
+    </button>
+
+
+  </section>
+
+  <!-- USER PROFILE -->
+
+  <section class="container">
+
+    <h2>User Profile</h2>
+
+    <div class="profile-card" id="profileCard">
+      <div class="profile-header">
+        <img
+          id="profilePicture"
+          class="profile-picture"
+          src=""
+          alt="Profile picture"
+        />
+
+        <div>
+          <p class="profile-name" id="profileUsername">-</p>
+          <p class="profile-email" id="profileEmail">-</p>
+        </div>
+      </div>
+
+      <div class="profile-stats" id="profileStats">
+        <div class="stat">
+          <div class="stat-label">Joined Date</div>
+          <div class="stat-value" id="joinedDate">-</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Services Posted</div>
+          <div class="stat-value" id="servicesPosted">-</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Jobs Completed</div>
+          <div class="stat-value" id="jobsCompleted">-</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Rating</div>
+          <div class="stat-value" id="rating">-</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- USER SERVICES -->
+
+  <section class="container">
+
+    <h2>My Services</h2>
+
+    <div
+      class="grid"
+      id="myServices"
+    ></div>
+
+  </section>
+
+  <script
+    type="module"
+    src="dashboard.js"
+  ></script>
+
+</body>
+</html>

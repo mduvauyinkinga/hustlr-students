@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - HUSTLR</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <img class="brand-logo" src="assets/hustlr-logo.png" alt="Hustlr logo">
+    <h1>HUSTLR</h1>
+  </div>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+</nav>
+
+
+<section class="container">
+  <h2>Login</h2>
+  <p class="subtitle">Use your email and password to access your account.</p>
+
+  <div class="card">
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <div class="form-actions">
+      <button class="btn" onclick="signup()">Sign Up</button>
+      <button class="btn" onclick="login()">Login</button>
+    </div>
+
+    <div class="form-links">
+      <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+    </div>
+
+    <label class="checkbox-row">
+      <input id="rememberMe" type="checkbox" />
+      <span>Remember Me</span>
+    </label>
+
+    <p id="status"></p>
+  </div>
+</section>
+
+<script type="module" src="auth.js"></script>
+<script type="module">
+  // UX hardening: if already logged in, don’t show login screen.
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { auth } from "./firebase.js";
+  onAuthStateChanged(auth, (user) => {
+    if (user) window.location.href = "dashboard.html";
+  });
+</script>
+</body>
+</html>

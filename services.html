@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Services - HUSTLR</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <img class="brand-logo" src="assets/hustlr-logo.png" alt="Hustlr logo">
+    <h1>HUSTLR</h1>
+  </div>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="post.html">Post</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="safety.html">Safety</a>
+
+  </div>
+</nav>
+
+<section class="container">
+
+  <h2>Available Services</h2>
+
+  <!-- SEARCH + FILTER BAR -->
+
+  <div class="filter-bar">
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search services..."
+    >
+
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+      <option value="tech">Tech Support</option>
+      <option value="food">Food&Drinks</option>
+      <option value="academic">Academic</option>
+      <option value="snacks">Snacks</option>
+      <option value="errands">Errands</option>
+    </select>
+
+    <select id="sortFilter">
+      <option value="newest">Newest</option>
+      <option value="oldest">Oldest</option>
+    </select>
+
+  </div>
+
+  <div class="grid" id="servicesContainer"></div>
+
+</section>
+
+<script type="module" src="services.js"></script>
+</body>
+</html>
+

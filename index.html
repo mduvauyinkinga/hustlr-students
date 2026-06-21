@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HUSTLR</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+  <meta name="theme-color" content="#b1123a">
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <img class="brand-logo" src="assets/hustlr-logo.png" alt="Hustlr logo">
+    <h1>HUSTLR</h1>
+  </div>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="post.html">Post</a>
+    <a href="safety.html">Safety</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="auth.html">Login</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h2>Need Something Done?</h2>
+  <p>Find trusted student hustlers for food,
+printing, tutoring and tech services around res and campus.</p>
+  <a class="btn" href="services.html">Find a Hustler</a>
+  <a class="btn" href="post.html">Become a Hustler</a>
+</section>
+
+<section class="container">
+  <h2>Featured Services</h2>
+  <div class="grid">
+
+    <div class="card">
+      <h3>Weave Store</h3>
+      <p>Beauty through hair.</p>
+      <button class="btn" onclick="requestService('Weave Store')">Request</button>
+    </div>
+
+    <div class="card">
+      <h3>Printing Help</h3>
+      <p>Notes, assignments, study packs printed fast.</p>
+      <button class="btn" onclick="requestService('Printing Help')">Request</button>
+    </div>
+
+    <div class="card">
+      <h3>Snacks Store</h3>
+      <p>Just need something to snack on?.</p>
+      <button class="btn" onclick="requestService('Snack Store')">Request</button>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  © 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+</footer>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>

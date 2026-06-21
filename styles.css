@@ -1,0 +1,364 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: #0f0f10;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+/* NAV */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 30px;
+  background: #12090d;
+  border-bottom: 1px solid #2a0f18;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+nav h1 {
+  color: #b1123a;
+  letter-spacing: 1px;
+  font-size: 24px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: #b1123a;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+  background: linear-gradient(135deg, #12090d, #000);
+}
+
+.hero h2 {
+  font-size: 42px;
+  color: #ffffff;
+}
+
+.hero p {
+  margin-top: 10px;
+  color: #bbb;
+}
+
+.btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #b1123a;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: #8e0e2f;
+}
+
+/* CARDS */
+.container {
+  padding: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #1a1a1d;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #2a2a2e;
+}
+
+.card h3 {
+  color: #b1123a;
+}
+
+.card p {
+  color: #ccc;
+  margin-top: 10px;
+}
+
+/* SERVICE CARDS */
+/* Ensure uploaded images don’t blow up card layout */
+.service-image {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  background: #2a2a2e;
+  margin-bottom: 12px;
+}
+
+/* Optional extra safety if images appear inside other card blocks */
+.card > img.service-image {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.service-card .service-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+
+.service-card .profile-picture {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #2a2a2e;
+  border: 1px solid #3a3a3f;
+}
+
+.service-card-header-text {
+  flex: 1;
+}
+
+.service-card .service-rating {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.service-card .star {
+  color: #f2c94c;
+  font-size: 16px;
+}
+
+.service-card .rating-value {
+  color: #ccc;
+  font-weight: 700;
+}
+
+.service-card .service-price {
+  margin-top: 14px;
+  color: #ffffff;
+}
+
+.service-card .service-description {
+  margin-top: 10px;
+}
+
+.contact-btn {
+  width: 100%;
+  margin-top: 14px;
+}
+
+/* PROFILE */
+.profile-card {
+  background: #1a1a1d;
+  border: 1px solid #2a2a2e;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 800px;
+}
+
+
+.profile-header {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.profile-picture {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #2a2a2e;
+  border: 1px solid #3a3a3f;
+}
+
+.profile-name {
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.profile-email {
+  color: #ccc;
+  margin-top: 6px;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.stat {
+  background: #12090d;
+  border: 1px solid #2a0f18;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.stat-label {
+  color: #bbb;
+  font-size: 13px;
+}
+
+.stat-value {
+  margin-top: 8px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* FORM */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+input, textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+
+input, textarea {
+  background: #1a1a1d;
+  color: white;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-actions .btn {
+  flex: 1;
+  min-width: 140px;
+}
+
+.form-links {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.form-links a {
+  color: #b1123a;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.form-links a:hover {
+  text-decoration: underline;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 6px;
+}
+
+.checkbox-row input {
+  width: auto;
+  margin: 0;
+  accent-color: #b1123a;
+}
+
+.subtitle {
+  color: #bbb;
+  margin-top: 6px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 50px;
+  border-top: 1px solid #2a0f18;
+  color: #777;
+}
+
+
+/* DASHBOARD ACTIONS */
+.dashboard-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-btn {
+  background: #d18b16;
+}
+
+.edit-btn:hover {
+  background: #b3740f;
+}
+
+.delete-btn {
+  background: #8e0e2f;
+}
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-bar input,
+.filter-bar select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1a1a1d;
+  color: white;
+  outline: none;
+}
+
+

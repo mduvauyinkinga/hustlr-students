@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Post Service - HUSTLR</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <img class="brand-logo" src="assets/hustlr-logo.png" alt="Hustlr logo">
+    <h1>HUSTLR</h1>
+  </div>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="post.html">Post</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="safety.html">Safety</a>
+
+  </div>
+</nav>
+
+<section class="container">
+  <h2>Become a Hustler</h2>
+
+  <form id="serviceForm">
+
+    <input
+      type="text"
+      id="title"
+      placeholder="Service Title"
+      required
+    >
+
+    <textarea
+      id="description"
+      placeholder="Describe your service"
+      rows="5"
+      required
+    ></textarea>
+
+    <input
+      type="file"
+      id="imageFile"
+      accept="image/*"
+      required
+    >
+    <small class="muted">JPG/PNG/WebP up to 5MB</small>
+
+    <input
+      type="text"
+      id="contact"
+      placeholder="WhatsApp Number (e.g. 0821234567)"
+      required
+    >
+
+    <select id="category" required>
+      <option value="tech">Tech Support</option>
+      <option value="food">Food&Drinks</option>
+      <option value="academic">Academic</option>
+      <option value="snacks">Snacks</option>
+      <option value="errands">Hair Essensials</option>
+    </select>
+
+    <input
+      type="number"
+      id="price"
+      placeholder="Price (R)"
+      min="0"
+      step="0.01"
+    >
+
+    <input
+      type="text"
+      id="location"
+      placeholder="Location"
+    >
+
+    <label class="checkbox">
+      <input type="checkbox" id="deliveryAvailable">
+      Delivery Available
+    </label>
+
+    <button class="btn" type="submit">
+      Post Service
+    </button>
+
+  </form>
+
+  <p id="status"></p>
+</section>
+
+<script type="module" src="post.js"></script>
+</body>
+</html>

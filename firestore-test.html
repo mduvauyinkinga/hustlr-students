@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firestore Test</title>
+  </head>
+  <body>
+    <button id="runTestBtn" type="button">Run Firestore Test</button>
+
+    <div id="testStatus" style="margin-top:12px; font-family:system-ui;"></div>
+
+    <script type="module" src="./firestore-test.js"></script>
+    <script>
+      const btn = document.getElementById("runTestBtn");
+      const statusEl = document.getElementById("testStatus");
+
+      function setStatus(msg) {
+        if (statusEl) statusEl.textContent = msg;
+      }
+
+      btn.addEventListener("click", async () => {
+        console.log("TEST WRITE START");
+        setStatus("Starting test...");
+
+        if (typeof window.runFirestoreTest !== "function") {
+          console.error(
+            "runFirestoreTest is not registered. Check console for module-load errors in firestore-test.js."
+          );
+          setStatus("Test failed: runFirestoreTest not registered");
+          return;
+        }
+
+        try {
+          setStatus("Running setDoc...");
+          await window.runFirestoreTest();
+          console.log("TEST WRITE END");
+          setStatus("TEST WRITE SUCCESS");
+        } catch (e) {
+          console.error("runFirestoreTest threw:", e);
+          setStatus(`TEST WRITE FAILED: ${e?.message || e}`);
+        }
+      });
+    </script>
+  </body>
+</html>
+
