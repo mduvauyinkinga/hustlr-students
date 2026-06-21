@@ -32,7 +32,7 @@ export const storage = getStorage(app);
 
 // Firebase App Check (anti-abuse) - ReCaptcha v3
 // NOTE: Replace the placeholder with your actual App Check reCAPTCHA v3 site key.
-const RECAPTCHA_V3_SITE_KEY = "6Le5ICstAAAAAAadjylbuHL9zsl_fbz5ReQDJ2nr";
+const RECAPTCHA_V3_SITE_KEY = "6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf";
 
 try {
   // Avoid double-initialization across modules/pages.
