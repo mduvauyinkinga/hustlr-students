@@ -3,7 +3,8 @@
 - [x] Inspect existing initialization in `firebase.js`
 - [x] Implement Firebase App Check using `initializeAppCheck` + `ReCaptchaV3Provider`
 
-- [ ] Ensure `isTokenAutoRefreshEnabled: true`
+- [x] Ensure `isTokenAutoRefreshEnabled: true`
+
 - [ ] Preserve existing exports: `auth`, `db`, `storage`
 - [ ] Remove all debug `console.log` statements from `firebase.js`
 - [ ] Add safe guard to prevent double App Check initialization
