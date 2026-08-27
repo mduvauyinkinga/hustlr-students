@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store - Hustlr</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="store.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="reviews.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="brand">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+      </picture>
+      <h1>HUSTLR</h1>
+    </div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html" id="authLink">Login</a>
+    </div>
+  </nav>
+
+  <!-- Loading State -->
+  <div id="loadingState" class="store-state">
+    <div class="spinner"></div>
+    <p>Loading store...</p>
+  </div>
+
+  <!-- Error State (Store Not Found) -->
+  <div id="errorState" class="store-state" style="display: none;">
+    <span class="state-icon">🏪</span>
+    <h3>Store not found</h3>
+    <p>This store doesn't exist or may have been removed.</p>
+    <a href="browse-stores.html" class="btn">Back to Marketplace</a>
+  </div>
+
+  <!-- Main Content -->
+  <div id="storeContent" style="display: none;">
+
+    <!-- Store Header -->
+    <header class="store-header">
+
+      <!-- Banner -->
+      <div class="store-banner-wrapper">
+        <img id="storeBanner" class="store-banner" src="" alt="Store banner" style="display: none;">
+        <div id="storeBannerPlaceholder" class="store-banner-placeholder">🏪</div>
+      </div>
+
+      <!-- Logo + Info Row -->
+      <div class="store-info-row">
+        <!-- Logo -->
+        <div class="store-logo-wrapper">
+          <img id="storeLogo" class="store-logo" src="" alt="Store logo" style="display: none;">
+          <div id="storeLogoPlaceholder" class="store-logo-placeholder">🏪</div>
+        </div>
+
+        <!-- Details -->
+        <div class="store-details">
+          <h1 id="storeName" class="store-name">Loading...</h1>
+          <span id="storeCategory" class="store-category"></span>
+          <p id="storeDescription" class="store-description"></p>
+
+          <!-- Product Count -->
+          <div id="storeProductCount" class="store-product-count"></div>
+
+          <!-- Badges -->
+          <div class="store-badges" id="storeBadges">
+            <span id="openBadge" class="store-badge"></span>
+            <span id="deliveryBadge" class="store-badge store-badge-delivery" style="display: none;">Delivery</span>
+            <span id="collectionBadge" class="store-badge store-badge-collection" style="display: none;">Collection</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Store Information Section -->
+    <section class="store-information" id="storeInfoSection">
+      <div class="store-info-inner">
+        <h3 class="store-info-heading">Store Information</h3>
+        <div class="store-info-grid">
+          <div class="store-info-item">
+            <span class="store-info-label">📞 Phone</span>
+            <span class="store-info-value" id="storeInfoPhone"></span>
+          </div>
+          <div class="store-info-item">
+            <span class="store-info-label">💬 WhatsApp</span>
+            <span class="store-info-value" id="storeInfoWhatsapp"></span>
+          </div>
+          <div class="store-info-item">
+            <span class="store-info-label">🕐 Hours</span>
+            <span class="store-info-value" id="storeInfoHours"></span>
+          </div>
+          <div class="store-info-item">
+            <span class="store-info-label">⚡ Status</span>
+            <span class="store-info-value" id="storeInfoStatus"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="store-products">
+      <h2 class="products-heading">Menu</h2>
+
+      <!-- Toolbar: search + filter + sort -->
+      <div class="store-toolbar">
+        <div class="search-wrapper">
+          <input
+            type="text"
+            id="productSearchInput"
+            class="search-input"
+            placeholder="Search products in this store..."
+            autocomplete="off"
+          />
+          <span class="search-icon">&#x1F50D;</span>
+        </div>
+
+        <div class="category-filters" id="productCategoryFilters"></div>
+
+        <div class="filter-row">
+          <button class="filter-chip" id="availabilityChip" data-filter="available">Available</button>
+          <select id="sortSelect" class="filter-select" aria-label="Sort products">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="alpha_asc">Name: A to Z</option>
+            <option value="alpha_desc">Name: Z to A</option>
+          </select>
+          <button class="clear-filters-btn" id="clearFiltersBtn" style="display:none;">Clear Filters</button>
+        </div>
+
+        <p class="results-count" id="productsResultsCount"></p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="store-state" style="display: none;">
+        <span class="state-icon">📋</span>
+        <h3>No products available yet</h3>
+        <p>This store hasn't added any products yet. Check back later.</p>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="productsGrid" class="products-grid"></div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="store-featured" id="featuredSection" style="display:none;">
+      <div class="store-featured-inner">
+        <h2 class="products-heading">Featured Products</h2>
+        <div class="products-grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <!-- Related Products (same category, other stores) -->
+    <section class="store-featured" id="relatedSection" style="display:none;">
+      <div class="store-featured-inner">
+        <h2 class="products-heading">Related Products</h2>
+        <p class="subtitle">More products in this category from other stores.</p>
+        <div class="products-grid" id="relatedGrid"></div>
+      </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section" id="reviewsSection" style="display:none;">
+      <h2 class="reviews-section-heading">Customer Reviews</h2>
+
+      <!-- Review Summary (average + breakdown) -->
+      <div class="review-summary" id="reviewSummary">
+        <div class="review-summary-average">
+          <div class="review-summary-average-value" id="reviewAvgValue">0.0</div>
+          <div class="review-summary-average-stars" id="reviewAvgStars"></div>
+          <div class="review-summary-average-label" id="reviewAvgLabel">0 reviews</div>
+        </div>
+        <div class="review-summary-breakdown" id="reviewBreakdownContainer"></div>
+      </div>
+
+      <!-- Sort Bar -->
+      <div class="review-sort-bar">
+        <button class="review-sort-btn active" data-sort="newest">Newest</button>
+        <button class="review-sort-btn" data-sort="highest">Highest Rated</button>
+        <button class="review-sort-btn" data-sort="lowest">Lowest Rated</button>
+        <span class="review-count-label" id="reviewCountLabel"></span>
+      </div>
+
+      <!-- Review List -->
+      <div class="review-list" id="reviewList">
+        <div class="loading-spinner" id="reviewListLoading">
+          <div class="spinner"></div>
+          <p>Loading reviews...</p>
+        </div>
+      </div>
+
+      <!-- Review Empty State -->
+      <div class="empty-state" id="reviewEmpty" style="display:none;">
+        <span class="empty-icon">💬</span>
+        <h3>No reviews yet</h3>
+        <p>Be the first to review this store.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+  </footer>
+
+  <script type="module" src="store.js"></script>
+  <script type="module" src="nav.js"></script>
+</body>
+</html>
+

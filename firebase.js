@@ -3,6 +3,7 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getFunctions } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
 
 import {
   initializeAppCheck,
@@ -26,23 +27,19 @@ const firebaseConfig = {
 const apps = getApps();
 const app = apps.length ? apps[0] : initializeApp(firebaseConfig);
 
+// Firebase App Check (anti-abuse) - reCAPTCHA v3.
+const RECAPTCHA_V3_SITE_KEY = "6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf";
+
+// Initialize App Check before creating Firebase service clients.
+// Do not continue if App Check cannot initialize; that would silently bypass this layer.
+initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+  isTokenAutoRefreshEnabled: true
+});
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-
-// Firebase App Check (anti-abuse) - ReCaptcha v3
-// NOTE: Replace the placeholder with your actual App Check reCAPTCHA v3 site key.
-const RECAPTCHA_V3_SITE_KEY = "6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf";
-
-try {
-  // Avoid double-initialization across modules/pages.
-  // If another module already called initializeAppCheck(app, ...), this will throw.
-  initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
-    isTokenAutoRefreshEnabled: true
-  });
-} catch (e) {
-  // Intentionally no console debug logs (requirement: remove debug logs from firebase.js).
-}
+export const functions = getFunctions(app);
 
 

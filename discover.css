@@ -1,0 +1,73 @@
+/* ── Discover Hero ─────────────────────────────────────────────── */
+.discover-hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+  background: linear-gradient(135deg, #12090d, #000);
+}
+
+.discover-hero h2 {
+  font-size: 36px;
+  color: #ffffff;
+}
+
+.discover-hero p {
+  margin-top: 10px;
+  color: #bbb;
+  font-size: 16px;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Toolbar ───────────────────────────────────────────────────── */
+.discover-toolbar {
+  padding-top: 24px;
+  padding-bottom: 0;
+}
+
+/* ── Results Grids ─────────────────────────────────────────────── */
+.discover-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  min-height: 100px;
+}
+
+.discover-stores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  min-height: 100px;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .discover-hero h2 {
+    font-size: 28px;
+  }
+
+  .discover-hero p {
+    font-size: 14px;
+  }
+
+  .discover-products-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .discover-stores-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .discover-hero {
+    padding: 40px 16px 30px;
+  }
+
+  .discover-hero h2 {
+    font-size: 24px;
+  }
+}
+

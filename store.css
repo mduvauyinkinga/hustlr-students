@@ -1,0 +1,377 @@
+/* ── Store States ──────────────────────────────────── */
+.store-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  text-align: center;
+  min-height: 50vh;
+}
+
+.store-state .state-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+}
+
+.store-state h3 {
+  font-size: 22px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.store-state p {
+  color: #888;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+/* ── Store Header ─────────────────────────────────── */
+.store-header {
+  background: #1a1a1d;
+  border-bottom: 1px solid #2a2a2e;
+}
+
+/* Banner */
+.store-banner-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #12090d, #1a1a1d);
+}
+
+.store-banner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.store-banner-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  color: #333;
+  background: linear-gradient(135deg, #12090d, #1a1a1d);
+}
+
+/* Info Row (logo + details) */
+.store-info-row {
+  display: flex;
+  gap: 20px;
+  padding: 0 40px 24px;
+  margin-top: -40px;
+  align-items: flex-end;
+}
+
+/* Logo */
+.store-logo-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid #1a1a1d;
+  background: #2a2a2e;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.store-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.store-logo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  color: #555;
+  background: #2a2a2e;
+}
+
+/* Details */
+.store-details {
+  flex: 1;
+  padding-top: 50px;
+}
+
+.store-name {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.store-category {
+  display: inline-block;
+  font-size: 13px;
+  color: #b1123a;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 6px;
+}
+
+.store-description {
+  font-size: 15px;
+  color: #aaa;
+  margin-top: 10px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+/* Badges */
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.store-badge-open {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.store-badge-closed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.store-badge-delivery {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.store-badge-collection {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+/* ── Product Count ────────────────────────────────── */
+.store-product-count {
+  font-size: 13px;
+  color: #888;
+  margin-top: 8px;
+}
+
+/* ── Store Information Section ────────────────────── */
+.store-information {
+  background: #1a1a1d;
+  border-bottom: 1px solid #2a2a2e;
+}
+
+.store-info-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 40px;
+}
+
+.store-info-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.store-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.store-info-item {
+  background: #0f0f10;
+  border: 1px solid #2a2a2e;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.store-info-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.store-info-value {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.store-info-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.store-info-status.open {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.store-info-status.closed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* ── Store Toolbar (search/filter/sort) ───────────── */
+.store-toolbar {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.store-toolbar .search-wrapper {
+  max-width: 480px;
+}
+
+.store-toolbar .results-count {
+  margin-bottom: 0;
+}
+
+/* ── Featured / Related Sections ──────────────────── */
+.store-featured {
+  padding: 32px 40px 60px;
+}
+
+.store-featured-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.store-featured-inner .products-heading {
+  margin-bottom: 8px;
+}
+
+.store-featured-inner .subtitle {
+  margin-bottom: 20px;
+}
+
+/* ── Products Section ─────────────────────────────── */
+.store-products {
+  padding: 32px 40px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.products-heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a2a2e;
+}
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .store-banner-wrapper {
+    height: 160px;
+  }
+
+  .store-info-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px 20px;
+    margin-top: -36px;
+  }
+
+  .store-logo-wrapper {
+    width: 72px;
+    height: 72px;
+  }
+
+  .store-details {
+    padding-top: 4px;
+  }
+
+  .store-name {
+    font-size: 22px;
+  }
+
+  .store-description {
+    max-width: 100%;
+  }
+
+  .store-badges {
+    justify-content: center;
+  }
+
+  .store-products {
+    padding: 24px 20px 40px;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .store-info-inner {
+    padding: 20px;
+  }
+
+  .store-info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .store-featured {
+    padding: 24px 20px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .store-banner-wrapper {
+    height: 140px;
+  }
+
+  .store-logo-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+
+  .store-name {
+    font-size: 20px;
+  }
+
+  .product-card-image {
+    height: 180px;
+  }
+
+  .product-card-image-placeholder {
+    height: 180px;
+  }
+}
+

@@ -8,7 +8,9 @@
   <title>Dashboard - HUSTLR</title>
 
   <link rel="stylesheet" href="styles.css">
-  <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script>
+  <link rel="stylesheet" href="reviews.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
 </head>
 <body>
 
@@ -16,17 +18,23 @@
 
   <nav>
     <div class="brand">
-      <img class="brand-logo" src="assets/hustlr-logo.png" alt="HUSTLR Logo">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="HUSTLR Logo" loading="eager">
+      </picture>
       <h1>HUSTLR</h1>
     </div>
 
     <div>
       <a href="index.html">Home</a>
-      <a href="services.html">Services</a>
-      <a href="post.html">Post</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
       <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
       <a href="safety.html">Safety</a>
-      <a href="auth.html">Login</a>
+      <a href="auth.html" id="authLink">Login</a>
     </div>
 
   </nav>
@@ -45,10 +53,9 @@
       Logout
     </button>
 
-
   </section>
 
-  <!-- USER PROFILE -->
+  <!-- USER PROFILE (shared by all roles) -->
 
   <section class="container">
 
@@ -75,10 +82,6 @@
           <div class="stat-value" id="joinedDate">-</div>
         </div>
         <div class="stat">
-          <div class="stat-label">Services Posted</div>
-          <div class="stat-value" id="servicesPosted">-</div>
-        </div>
-        <div class="stat">
           <div class="stat-label">Jobs Completed</div>
           <div class="stat-value" id="jobsCompleted">-</div>
         </div>
@@ -91,23 +94,287 @@
 
   </section>
 
-  <!-- USER SERVICES -->
+  <!-- ============================================================ -->
+  <!-- CUSTOMER SECTIONS (hidden by default, shown for customers)    -->
+  <!-- ============================================================ -->
 
-  <section class="container">
+  <!-- CUSTOMER: Active Orders -->
+  <section class="container" id="customerOrdersSection" style="display:none;">
 
-    <h2>My Services</h2>
+    <h2>Active Orders</h2>
 
-    <div
-      class="grid"
-      id="myServices"
-    ></div>
+    <div id="customerActiveOrdersContent">
+      <div class="loading-spinner" id="customerActiveLoading">
+        <div class="spinner"></div>
+        <p>Loading your orders...</p>
+      </div>
+      <div class="empty-state" id="customerActiveEmpty" style="display:none;">
+        <span class="empty-icon">📋</span>
+        <h3>No Active Orders</h3>
+        <p>You don't have any active orders at the moment.</p>
+        <a href="browse-stores.html" class="btn">Browse Stores</a>
+      </div>
+      <div class="order-list" id="customerActiveOrdersList"></div>
+      <div class="empty-state" id="customerActiveError" style="display:none;">
+        <span class="empty-icon">⚠️</span>
+        <h3>Error Loading Orders</h3>
+        <p>We couldn't load your active orders. Please try refreshing the page.</p>
+      </div>
+    </div>
 
   </section>
 
-  <script
-    type="module"
-    src="dashboard.js"
-  ></script>
+<!-- CUSTOMER: Past Orders -->
+  <section class="container" id="customerHistorySection" style="display:none;">
+
+    <h2>Past Orders</h2>
+
+    <div id="customerPastOrdersContent">
+      <div class="loading-spinner" id="customerPastLoading">
+        <div class="spinner"></div>
+        <p>Loading order history...</p>
+      </div>
+      <div class="empty-state" id="customerPastEmpty" style="display:none;">
+        <span class="empty-icon">📜</span>
+        <h3>No Past Orders</h3>
+        <p>Your completed and cancelled orders will appear here.</p>
+      </div>
+      <div class="order-list" id="customerPastOrdersList"></div>
+      <div class="empty-state" id="customerPastError" style="display:none;">
+        <span class="empty-icon">⚠️</span>
+        <h3>Error Loading Orders</h3>
+        <p>We couldn't load your past orders. Please try refreshing the page.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CUSTOMER: Recent Orders (max 5) -->
+  <section class="container" id="customerRecentSection" style="display:none;">
+
+    <h2>Recent Orders</h2>
+
+    <div id="customerRecentOrdersContent">
+      <div class="empty-state" id="customerRecentEmpty" style="display:none;">
+        <span class="empty-icon">📋</span>
+        <h3>No Recent Orders</h3>
+        <p>Your recent orders will appear here.</p>
+        <a href="browse-stores.html" class="btn">Browse Stores</a>
+      </div>
+      <div class="order-list" id="customerRecentOrdersList"></div>
+    </div>
+
+  </section>
+
+  <!-- CUSTOMER: Pending Reviews (completed orders not yet reviewed) -->
+  <section class="container" id="customerPendingReviewsSection" style="display:none;">
+    <h2>Pending Reviews</h2>
+    <p class="subtitle">Completed orders awaiting your review.</p>
+    <div id="customerPendingReviewsContent">
+      <div class="loading-spinner" id="customerPendingReviewsLoading">
+        <div class="spinner"></div>
+        <p>Loading pending reviews...</p>
+      </div>
+      <div class="empty-state" id="customerPendingReviewsEmpty" style="display:none;">
+        <span class="empty-icon">⭐</span>
+        <h3>No Pending Reviews</h3>
+        <p>You've reviewed all your completed orders. Thank you!</p>
+        <a href="browse-stores.html" class="btn">Browse Stores</a>
+      </div>
+      <div class="review-list" id="customerPendingReviewsList"></div>
+    </div>
+  </section>
+
+  <!-- CUSTOMER: Recently Reviewed -->
+  <section class="container" id="customerReviewedSection" style="display:none;">
+    <h2>Recently Reviewed</h2>
+    <p class="subtitle">Stores you've recently reviewed.</p>
+    <div id="customerReviewedContent">
+      <div class="loading-spinner" id="customerReviewedLoading">
+        <div class="spinner"></div>
+        <p>Loading your reviews...</p>
+      </div>
+      <div class="empty-state" id="customerReviewedEmpty" style="display:none;">
+        <span class="empty-icon">📝</span>
+        <h3>No Reviews Yet</h3>
+        <p>Your reviews will appear here after you review a completed order.</p>
+      </div>
+      <div class="review-list" id="customerReviewedList"></div>
+    </div>
+  </section>
+
+  <!-- CUSTOMER: Order Tracking Modal -->
+  <div class="modal-overlay" id="orderTrackingModal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="trackingModalTitle">Order Tracking</h3>
+        <button class="modal-close-btn" id="trackingModalClose">&times;</button>
+      </div>
+      <div class="modal-body" id="trackingModalBody">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading order details...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOMER: Review Modal Target -->
+  <div id="dashboardReviewModalTarget"></div>
+
+  <!-- ============================================================ -->
+  <!-- SELLER SECTIONS (hidden by default, shown for sellers)        -->
+  <!-- ============================================================ -->
+
+  <div id="sellerSections" style="display:none;">
+
+    <!-- MARKETPLACE QUICK ACCESS -->
+
+    <section class="container">
+
+      <h2>My Marketplace</h2>
+
+      <div class="grid" id="marketplaceLinks">
+
+        <a href="my-store.html" class="card marketplace-card">
+          <span style="font-size:32px;">🏪</span>
+          <h3>My Store</h3>
+          <p>Manage your store settings and information.</p>
+        </a>
+
+        <a href="products.html" class="card marketplace-card">
+          <span style="font-size:32px;">📦</span>
+          <h3>Products</h3>
+          <p>Add, edit and manage your products.</p>
+        </a>
+
+        <a href="seller-orders.html" class="card marketplace-card">
+          <span style="font-size:32px;">📋</span>
+          <h3>Orders</h3>
+          <p>View and manage customer orders.</p>
+        </a>
+
+        <a href="subscription.html" class="card marketplace-card">
+          <span style="font-size:32px;">💳</span>
+          <h3>Seller Subscription</h3>
+          <p>Manage your Hustlr seller subscription.</p>
+        </a>
+
+        <div class="card marketplace-card" style="opacity:0.6; cursor:default;">
+          <span style="font-size:32px;">📊</span>
+          <h3>Analytics</h3>
+          <p>Track your store performance.</p>
+          <span style="display:inline-block; margin-top:8px; padding:4px 10px; background:#2a2a2e; border-radius:4px; font-size:12px; color:#bbb;">Coming Soon</span>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SELLER: Metrics Cards -->
+    <section class="container">
+      <h2>Order Overview</h2>
+      <div class="seller-metrics-grid" id="sellerMetrics">
+        <div class="metric-card metric-pending">
+          <div class="metric-value" id="metricPending">0</div>
+          <div class="metric-label">Pending</div>
+        </div>
+        <div class="metric-card" style="--metric-color: #f97316;">
+          <div class="metric-value" id="metricOrdersToday" style="color: #f97316;">0</div>
+          <div class="metric-label">Orders Today</div>
+        </div>
+        <div class="metric-card" style="--metric-color: #22c55e;">
+          <div class="metric-value" id="metricRevenueToday" style="color: #22c55e;">R0.00</div>
+          <div class="metric-label">Revenue Today</div>
+        </div>
+        <div class="metric-card metric-completed">
+          <div class="metric-value" id="metricCompletedToday">0</div>
+          <div class="metric-label">Completed Today</div>
+        </div>
+      </div>
+</section>
+
+<!-- SELLER: Recent Orders (max 5) -->
+    <section class="container" id="sellerRecentSection">
+      <h2>Recent Orders</h2>
+      <div id="sellerRecentOrdersContent">
+        <div class="empty-state" id="sellerRecentEmpty" style="display:none;">
+          <span class="empty-icon">📋</span>
+          <h3>No Recent Orders</h3>
+          <p>Your recent orders will appear here.</p>
+        </div>
+        <div class="order-list" id="sellerRecentOrdersList"></div>
+      </div>
+    </section>
+
+    <!-- SELLER: Reviews Overview -->
+    <section class="container" id="sellerReviewsSection" style="display:none;">
+      <h2>Reviews</h2>
+      <div class="seller-metrics-grid" id="sellerReviewMetrics">
+        <div class="metric-card" style="--metric-color: #f59e0b;">
+          <div class="metric-value" id="sellerAvgRating" style="color: #f59e0b;">0.0</div>
+          <div class="metric-label">Average Rating</div>
+        </div>
+        <div class="metric-card" style="--metric-color: #3b82f6;">
+          <div class="metric-value" id="sellerTotalReviews" style="color: #3b82f6;">0</div>
+          <div class="metric-label">Total Reviews</div>
+        </div>
+      </div>
+
+      <!-- Rating Breakdown Widget -->
+      <div id="sellerReviewsBreakdown" class="seller-reviews-breakdown"></div>
+      <div id="sellerReviewsContent">
+        <div class="loading-spinner" id="sellerReviewsLoading">
+          <div class="spinner"></div>
+          <p>Loading reviews...</p>
+        </div>
+        <div class="empty-state" id="sellerReviewsEmpty" style="display:none;">
+          <span class="empty-icon">💬</span>
+          <h3>No Reviews Yet</h3>
+          <p>Customer reviews will appear here.</p>
+        </div>
+        <div class="review-list" id="sellerReviewsList"></div>
+      </div>
+    </section>
+
+    <!-- SELLER: Orders Received -->
+    <section class="container">
+      <h2>Orders Received</h2>
+
+      <!-- Status filter tabs -->
+      <div class="order-filter-tabs" id="sellerOrderFilters">
+        <button class="order-filter-btn active" data-filter="all">All</button>
+        <button class="order-filter-btn" data-filter="pending">Pending</button>
+        <button class="order-filter-btn" data-filter="preparing">Preparing</button>
+        <button class="order-filter-btn" data-filter="ready">Ready</button>
+        <button class="order-filter-btn" data-filter="completed">Completed</button>
+        <button class="order-filter-btn" data-filter="cancelled">Cancelled</button>
+      </div>
+
+      <div id="sellerOrdersContent">
+        <div class="loading-spinner" id="sellerOrdersLoading">
+          <div class="spinner"></div>
+          <p>Loading orders...</p>
+        </div>
+        <div class="empty-state" id="sellerOrdersEmpty" style="display:none;">
+          <span class="empty-icon">📋</span>
+          <h3>No Orders Yet</h3>
+          <p>When customers place orders, they will appear here in real-time.</p>
+        </div>
+        <div class="order-list" id="sellerOrdersList"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL OVERLAY                                                -->
+  <!-- ============================================================ -->
+
+  <!-- Order Tracking Modal (reused) -->
+
+  <script type="module" src="dashboard.js"></script>
+  <script type="module" src="nav.js"></script>
 
 </body>
 </html>

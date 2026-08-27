@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>HUSTLR</title>
   <meta charset="UTF-8">
-<script src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TODO: Re-enable reCAPTCHA before production. -->
+  <!-- Removed temporarily during development to focus on core features. -->
+  <!-- <script defer src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script> -->
   <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
+  
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="browse-stores.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="reviews.css">
+
   <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
   <meta name="theme-color" content="#b1123a">
@@ -16,56 +22,76 @@
 
 <nav>
   <div class="brand">
-    <img class="brand-logo" src="assets/hustlr-logo.png" alt="Hustlr logo">
+    <picture>
+      <source type="image/webp" srcset="assets/hustlr-logo.png">
+      <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+    </picture>
     <h1>HUSTLR</h1>
   </div>
+
   <div>
     <a href="index.html">Home</a>
-    <a href="services.html">Services</a>
-    <a href="post.html">Post</a>
-    <a href="safety.html">Safety</a>
+    <a href="discover.html">Discover</a>
+    <a href="browse-stores.html">Browse Stores</a>
+    <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
     <a href="dashboard.html">Dashboard</a>
-    <a href="auth.html">Login</a>
+    <span id="sellerNavLinks" style="display:none;"></span>
+    <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+    <a href="safety.html">Safety</a>
+    <a href="auth.html" id="authLink">Login</a>
   </div>
 </nav>
 
 <section class="hero">
   <h2>Need Something Done?</h2>
-  <p>Find trusted student hustlers for food,
-printing, tutoring and tech services around res and campus.</p>
-  <a class="btn" href="services.html">Find a Hustler</a>
-  <a class="btn" href="post.html">Become a Hustler</a>
-</section>
+  <p>Discover stores and products from trusted student hustlers around res and campus.</p>
 
-<section class="container">
-  <h2>Featured Services</h2>
-  <div class="grid">
+  <!-- Global Search Entry Point -->
+  <form class="hero-search" id="heroSearchForm" action="discover.html" method="get">
+    <input
+      type="text"
+      name="q"
+      class="search-input"
+      placeholder="Search products, stores, categories..."
+      autocomplete="off"
+      aria-label="Search HUSTLR"
+    />
+    <button type="submit" class="btn hero-search-btn">Search</button>
+  </form>
 
-    <div class="card">
-      <h3>Weave Store</h3>
-      <p>Beauty through hair.</p>
-      <button class="btn" onclick="requestService('Weave Store')">Request</button>
-    </div>
-
-    <div class="card">
-      <h3>Printing Help</h3>
-      <p>Notes, assignments, study packs printed fast.</p>
-      <button class="btn" onclick="requestService('Printing Help')">Request</button>
-    </div>
-
-    <div class="card">
-      <h3>Snacks Store</h3>
-      <p>Just need something to snack on?.</p>
-      <button class="btn" onclick="requestService('Snack Store')">Request</button>
-    </div>
-
+  <div class="hero-ctas">
+    <a class="btn" href="discover.html">Start Exploring</a>
+    <a class="btn btn-secondary" href="auth.html">Get Started</a>
   </div>
 </section>
 
-<footer>
+<!-- Browse Categories Shortcut -->
+<section class="container">
+  <h2>Browse by Category</h2>
+  <p class="subtitle">Jump straight into what you're looking for.</p>
+  <div class="category-chips" id="categoryChips"></div>
+</section>
+
+<!-- Featured Stores -->
+<section class="container">
+  <h2>Featured Stores</h2>
+  <p class="subtitle">Browse stores and find what you need.</p>
+  <div class="grid" id="featuredStores"></div>
+</section>
+
+<!-- Featured Products -->
+<section class="container" id="featuredProductsSection" style="display:none;">
+  <h2>Fresh on HUSTLR</h2>
+  <p class="subtitle">Newest products from around campus.</p>
+  <div class="grid" id="featuredProducts"></div>
+</section>
+
+  <footer>
   © 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
 </footer>
 
-<script type="module" src="script.js"></script>
+<script type="module" src="index.js"></script>
+<script type="module" src="nav.js"></script>
 </body>
 </html>
+

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse stores on HUSTLR - the student-powered campus marketplace.">
+  <title>Browse Stores - HUSTLR</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="browse-stores.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="reviews.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+  <meta name="theme-color" content="#b1123a">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+      </picture>
+      <h1>HUSTLR</h1>
+    </div>
+
+    <div>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html" id="authLink">Login</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="browse-hero">
+    <h2>Hustlr Marketplace</h2>
+    <p>Discover stores and products from trusted student hustlers around res and campuses.</p>
+  </section>
+
+  <!-- SEARCH & FILTERS -->
+  <section class="browse-toolbar container">
+    <div class="search-wrapper">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="Search stores by name, category or description..."
+        autocomplete="off"
+      />
+      <span class="search-icon">&#x1F50D;</span>
+    </div>
+
+    <div class="category-filters" id="categoryFilters">
+      <button class="category-btn active" data-category="all">All</button>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-chip" id="openNowChip" data-filter="openNow">Open Now</button>
+      <button class="filter-chip" id="deliveryChip" data-filter="delivery">Delivery</button>
+      <button class="filter-chip" id="collectionChip" data-filter="collection">Collection</button>
+
+      <select id="sortSelect" class="filter-select" aria-label="Sort stores">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="alpha_asc">Name: A to Z</option>
+        <option value="alpha_desc">Name: Z to A</option>
+      </select>
+
+      <button class="clear-filters-btn" id="clearFiltersBtn" style="display:none;">Clear Filters</button>
+    </div>
+
+    <p class="results-count" id="resultsCount"></p>
+  </section>
+
+  <!-- STORES GRID -->
+  <section class="container">
+    <div id="storesGrid" class="stores-grid"></div>
+
+    <!-- LOADING STATE -->
+    <div id="loadingState" class="browse-state">
+      <div class="spinner"></div>
+      <p>Loading stores...</p>
+    </div>
+
+    <!-- EMPTY STATE (no stores at all) -->
+    <div id="emptyState" class="browse-state" style="display:none;">
+      <span class="state-icon">🏪</span>
+      <h3>No stores available yet.</h3>
+      <p>Check back later for new stores opening on HUSTLR.</p>
+    </div>
+
+    <!-- NO RESULTS STATE (search/filter returned nothing) -->
+    <div id="noResultsState" class="browse-state" style="display:none;">
+      <span class="state-icon">🔍</span>
+      <h3>No stores match your search.</h3>
+      <p>Try adjusting your search term or category.</p>
+    </div>
+
+    <!-- ERROR STATE -->
+    <div id="errorState" class="browse-state" style="display:none;">
+      <span class="state-icon">⚠️</span>
+      <h3>Unable to load stores. Please try again.</h3>
+      <p>Something went wrong. Refresh the page to try again.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+  </footer>
+
+  <script type="module" src="browse-stores.js"></script>
+  <script type="module" src="nav.js"></script>
+</body>
+</html>
+

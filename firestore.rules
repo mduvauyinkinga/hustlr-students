@@ -1,0 +1,294 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isSeller() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        userRole() == "seller";
+    }
+
+    function hasActiveSubscription() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/sellerSubscriptionPublic/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/sellerSubscriptionPublic/$(request.auth.uid)).data.status == "ACTIVE";
+    }
+
+    function isActiveSeller() {
+      return isSeller() && hasActiveSubscription();
+    }
+
+    function isCustomer() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        userRole() == "customer";
+    }
+
+    function onlyAllowedFields(allowedFields) {
+      return request.resource.data.keys().hasOnly(allowedFields);
+    }
+
+    function onlyChangedFields(allowedFields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFields);
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+
+      allow create: if isOwner(userId) && request.resource.data.role == "customer";
+
+      allow update: if (
+        isOwner(userId) && (
+          (
+            request.resource.data.role == resource.data.role &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'name', 'email', 'phone', 'photoURL', 'updatedAt'
+            ])
+          ) ||
+          (
+            resource.data.role == "customer" &&
+            request.resource.data.role == "seller" &&
+            exists(/databases/$(database)/documents/stores/$(userId)) &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'updatedAt'])
+          )
+        )
+      ) || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    match /stores/{storeId} {
+      allow read: if true;
+
+      allow create: if
+        signedIn() &&
+        request.auth.uid == storeId &&
+        request.resource.data.keys().hasOnly([
+          'storeName', 'category', 'description', 'phone', 'whatsapp',
+          'logoURL', 'bannerURL', 'deliveryAvailable', 'collectionAvailable',
+          'deliveryFee', 'rating', 'averageRating', 'reviewCount', 'ratingBreakdown',
+          'openingTime', 'closingTime', 'isOpen', 'status', 'createdAt', 'updatedAt'
+        ]) &&
+        request.resource.data.status == 'active';
+
+      allow update: if (
+        isActiveSeller() &&
+        request.auth.uid == storeId &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'storeName', 'category', 'description', 'phone', 'whatsapp',
+          'logoURL', 'bannerURL', 'deliveryAvailable', 'collectionAvailable',
+          'deliveryFee', 'openingTime', 'closingTime', 'isOpen', 'status',
+          'updatedAt', 'averageRating', 'reviewCount', 'ratingBreakdown', 'lastReviewOrderId'
+        ])
+      ) || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    match /storePrivate/{storeId} {
+      allow read: if isOwner(storeId) || isAdmin();
+
+      allow create: if
+        signedIn() &&
+        request.auth.uid == storeId &&
+        request.resource.data.ownerId == request.auth.uid &&
+        request.resource.data.keys().hasOnly(['ownerId', 'createdAt', 'updatedAt']);
+
+      allow update: if
+        (isOwner(storeId) &&
+         request.resource.data.ownerId == resource.data.ownerId &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt'])
+        ) || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+
+      allow create: if
+        isActiveSeller() &&
+        request.resource.data.storeId == request.auth.uid &&
+        request.resource.data.price is number &&
+        request.resource.data.price >= 0 &&
+        request.resource.data.keys().hasOnly([
+          'storeId', 'name', 'description', 'price', 'category',
+          'imageURL', 'available', 'createdAt', 'updatedAt'
+        ]);
+
+      allow update: if
+        (isActiveSeller() &&
+         resource.data.storeId == request.auth.uid &&
+         request.resource.data.storeId == resource.data.storeId &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+           'name', 'description', 'price', 'category', 'imageURL', 'available', 'updatedAt'
+         ])
+        ) || isAdmin();
+
+      allow delete: if
+        (isActiveSeller() && resource.data.storeId == request.auth.uid) || isAdmin();
+    }
+
+    match /productPrivate/{productId} {
+      allow read: if
+        (isActiveSeller() && exists(/databases/$(database)/documents/products/$(productId)) &&
+         get(/databases/$(database)/documents/products/$(productId)).data.storeId == request.auth.uid) ||
+        isAdmin();
+
+      allow create: if
+        isActiveSeller() &&
+        exists(/databases/$(database)/documents/products/$(productId)) &&
+        get(/databases/$(database)/documents/products/$(productId)).data.storeId == request.auth.uid &&
+        request.resource.data.ownerId == request.auth.uid &&
+        request.resource.data.storeId == request.auth.uid &&
+        request.resource.data.keys().hasOnly(['ownerId', 'storeId', 'createdAt', 'updatedAt']);
+
+      allow update: if
+        (isActiveSeller() &&
+         exists(/databases/$(database)/documents/products/$(productId)) &&
+         get(/databases/$(database)/documents/products/$(productId)).data.storeId == request.auth.uid &&
+         request.resource.data.ownerId == resource.data.ownerId &&
+         request.resource.data.storeId == resource.data.storeId &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt'])
+        ) || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow read: if signedIn() && (
+        resource.data.customerId == request.auth.uid ||
+        (resource.data.storeId == request.auth.uid && isActiveSeller()) ||
+        isAdmin()
+      );
+
+      allow create: if false;
+      // Admin order mutation is intentionally unavailable until a defined
+      // administrative workflow is implemented.
+      // All order mutations go through the trusted callable so immutable
+      // fields and status history are protected.
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /reviews/{orderId} {
+      allow read: if true;
+
+      allow create: if
+        isCustomer() &&
+        request.resource.data.orderId == orderId &&
+        request.resource.data.storeId is string &&
+        request.resource.data.rating is int &&
+        request.resource.data.rating >= 1 &&
+        request.resource.data.rating <= 5 &&
+        request.resource.data.comment is string &&
+        request.resource.data.comment.size() >= 10 &&
+        request.resource.data.comment.size() <= 500 &&
+        request.resource.data.status == 'active' &&
+        exists(/databases/$(database)/documents/orders/$(orderId)) &&
+        get(/databases/$(database)/documents/orders/$(orderId)).data.status == 'completed' &&
+        get(/databases/$(database)/documents/orders/$(orderId)).data.customerId == request.auth.uid &&
+        get(/databases/$(database)/documents/orders/$(orderId)).data.storeId == request.resource.data.storeId &&
+        request.resource.data.keys().hasOnly([
+          'storeId', 'orderId', 'customerName', 'customerPhoto', 'rating', 'comment',
+          'images', 'verifiedPurchase', 'sellerReply', 'sellerReplyAt', 'status', 'createdAt', 'updatedAt'
+        ]);
+
+      allow update: if signedIn() && (
+        (
+          get(/databases/$(database)/documents/reviewPrivate/$(orderId)).data.customerId == request.auth.uid &&
+          resource.data.status == 'active' &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'comment', 'status', 'updatedAt']) &&
+          request.resource.data.status == resource.data.status ||
+          (
+            resource.data.status == 'active' &&
+            request.resource.data.status == 'deleted'
+          )
+        ) ||
+        (
+          isActiveSeller() &&
+          get(/databases/$(database)/documents/reviewPrivate/$(orderId)).data.sellerId == request.auth.uid &&
+          resource.data.storeId == request.auth.uid &&
+          resource.data.status == 'active' &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sellerReply', 'sellerReplyAt', 'updatedAt'])
+        ) ||
+        isAdmin()
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    match /reviewPrivate/{orderId} {
+      allow read: if signedIn() && (
+        resource.data.customerId == request.auth.uid ||
+        resource.data.sellerId == request.auth.uid ||
+        isAdmin()
+      );
+
+      allow create: if
+        isCustomer() &&
+        request.resource.data.customerId == request.auth.uid &&
+        request.resource.data.sellerId == get(/databases/$(database)/documents/orders/$(orderId)).data.storeId &&
+        request.resource.data.orderId == orderId &&
+        request.resource.data.keys().hasOnly(['customerId', 'sellerId', 'orderId', 'verifiedPurchase', 'status', 'createdAt', 'updatedAt']) &&
+        exists(/databases/$(database)/documents/orders/$(orderId)) &&
+        get(/databases/$(database)/documents/orders/$(orderId)).data.status == 'completed' &&
+        get(/databases/$(database)/documents/orders/$(orderId)).data.customerId == request.auth.uid;
+
+      allow update: if signedIn() && (
+        (
+          resource.data.customerId == request.auth.uid &&
+          request.resource.data.customerId == resource.data.customerId &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+        ) ||
+        (
+          isActiveSeller() &&
+          resource.data.sellerId == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt'])
+        ) ||
+        isAdmin()
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    match /sellerSubscriptionPublic/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if false;
+    }
+
+    match /sellerSubscriptions/{userId} {
+      allow read, write: if false;
+    }
+
+    match /paypalSubscriptions/{subscriptionId} {
+      allow read, write: if false;
+    }
+
+    match /paypalWebhookEvents/{eventId} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

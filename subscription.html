@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Subscription - HUSTLR</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="subscription.css">
+</head>
+<body>
+  <nav>
+    <div class="brand"><img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="HUSTLR Logo"><h1>HUSTLR</h1></div>
+    <div><a href="dashboard.html">Dashboard</a><a href="auth.html" id="authLink">Login</a></div>
+  </nav>
+
+  <main class="subscription-shell">
+    <section class="subscription-header">
+      <p class="eyebrow">Seller account</p>
+      <h2>Keep your seller tools active</h2>
+      <p>Seller subscriptions are required for store management, products, media, seller orders, and seller replies. Your store and data remain intact if a subscription ends.</p>
+    </section>
+
+    <section class="subscription-panel" aria-labelledby="subscriptionStatusHeading">
+      <div class="panel-heading"><h3 id="subscriptionStatusHeading">Current subscription</h3><span id="statusBadge" class="status-badge">Checking...</span></div>
+      <p id="statusText">Loading authoritative subscription status...</p>
+      <p id="renewalText" class="muted"></p>
+      <button id="cancelButton" class="btn secondary" type="button" hidden>Cancel subscription</button>
+    </section>
+
+    <section aria-labelledby="plansHeading">
+      <div class="section-heading"><h3 id="plansHeading">Choose a plan</h3><p class="muted">Recurring pricing and currency are controlled by the approved PayPal plan.</p></div>
+      <div class="plan-grid">
+        <article class="plan-card"><h4>Starter</h4><p class="plan-price">PayPal plan pricing</p><p>Recurring seller access for a growing storefront.</p><button class="btn plan-button" data-plan-key="starter" type="button">Continue with PayPal</button></article>
+        <article class="plan-card featured"><h4>Pro</h4><p class="plan-price">PayPal plan pricing</p><p>Recurring seller access for an established storefront.</p><button class="btn plan-button" data-plan-key="pro" type="button">Continue with PayPal</button></article>
+      </div>
+    </section>
+    <p id="subscriptionMessage" class="subscription-message" role="status"></p>
+  </main>
+  <script type="module" src="subscription.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your shopping cart on HUSTLR - the student-powered campus marketplace.">
+  <title>Cart - HUSTLR</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="cart.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+  <meta name="theme-color" content="#b1123a">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+      </picture>
+      <h1>HUSTLR</h1>
+    </div>
+
+    <div>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html" id="authLink">Login</a>
+    </div>
+  </nav>
+
+  <!-- EMPTY STATE -->
+  <div id="emptyState" class="cart-state" style="display: none;">
+    <span class="state-icon">🛒</span>
+    <h3>Your cart is empty</h3>
+    <p>Browse stores and add products to get started.</p>
+    <a href="browse-stores.html" class="btn">Browse Stores</a>
+  </div>
+
+  <!-- CART CONTENT -->
+  <div id="cartContent" class="cart-page" style="display: none;">
+
+    <h1 class="cart-page-title">Your Cart</h1>
+    <p id="cartStoreName" class="cart-store-name"></p>
+
+    <!-- Items -->
+    <div id="cartItems" class="cart-items"></div>
+
+    <!-- Summary -->
+    <div class="cart-summary" id="cartSummary">
+      <div class="cart-summary-row">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">R0.00</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>Items</span>
+        <span id="cartItemCount">0</span>
+      </div>
+      <div class="cart-summary-row cart-summary-total">
+        <span>Total</span>
+        <span id="cartTotal">R0.00</span>
+      </div>
+
+      <!-- Checkout -->
+      <div class="checkout-placeholder">
+        <a href="checkout.html" class="btn" id="checkoutBtn" style="opacity:1; cursor:pointer; text-decoration:none;">Proceed to Checkout</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+  </footer>
+
+  <script type="module" src="cart.js"></script>
+  <script type="module" src="nav.js"></script>
+  <script type="module">
+    import { getCart, removeFromCart, updateQuantity, getCartTotal, getItemCount, formatPrice } from "./cart.js";
+
+    // ── Elements ──────────────────────────────────────────────────
+    const emptyState = document.getElementById("emptyState");
+    const cartContent = document.getElementById("cartContent");
+    const cartItems = document.getElementById("cartItems");
+    const cartStoreName = document.getElementById("cartStoreName");
+    const cartSubtotal = document.getElementById("cartSubtotal");
+    const cartItemCount = document.getElementById("cartItemCount");
+    const cartTotal = document.getElementById("cartTotal");
+    const cartCountNav = document.getElementById("cartCount");
+
+    // ── Update Nav Cart Count ────────────────────────────────────
+    function updateNavCount() {
+      if (cartCountNav) {
+        cartCountNav.textContent = getItemCount();
+      }
+    }
+
+    // ── Render Cart ──────────────────────────────────────────────
+    function renderCart() {
+      const cart = getCart();
+
+      updateNavCount();
+
+      if (!cart.items || cart.items.length === 0) {
+        emptyState.style.display = "flex";
+        cartContent.style.display = "none";
+        return;
+      }
+
+      emptyState.style.display = "none";
+      cartContent.style.display = "block";
+
+      // Store name
+      cartStoreName.textContent = cart.storeName ? "From: " + cart.storeName : "";
+
+      // Items
+      cartItems.replaceChildren();
+
+      cart.items.forEach((item) => {
+        const el = document.createElement("div");
+        el.className = "cart-item";
+        el.dataset.productId = item.productId;
+
+        // Image
+        if (item.imageURL) {
+          const img = document.createElement("img");
+          img.className = "cart-item-image";
+          img.src = String(item.imageURL);
+          img.alt = String(item.name || "Product image");
+          img.loading = "lazy";
+          el.appendChild(img);
+        } else {
+          const placeholder = document.createElement("div");
+          placeholder.className = "cart-item-image-placeholder";
+          placeholder.textContent = "📦";
+          el.appendChild(placeholder);
+        }
+
+        // Info
+        const info = document.createElement("div");
+        info.className = "cart-item-info";
+
+        const nameEl = document.createElement("h3");
+        nameEl.className = "cart-item-name";
+        nameEl.textContent = String(item.name || "Unnamed Product");
+        info.appendChild(nameEl);
+
+const priceEl = document.createElement("div");
+        priceEl.className = "cart-item-price";
+        priceEl.textContent = formatPrice(item.price);
+        info.appendChild(priceEl);
+
+        // Controls
+        const controls = document.createElement("div");
+        controls.className = "cart-item-controls";
+
+        const minusBtn = document.createElement("button");
+        minusBtn.className = "cart-qty-btn";
+        minusBtn.textContent = "−";
+        minusBtn.setAttribute("aria-label", "Decrease quantity");
+        controls.appendChild(minusBtn);
+
+        const qtyEl = document.createElement("span");
+        qtyEl.className = "cart-qty-value";
+        qtyEl.textContent = String(item.quantity);
+        controls.appendChild(qtyEl);
+
+        const plusBtn = document.createElement("button");
+        plusBtn.className = "cart-qty-btn";
+        plusBtn.textContent = "+";
+        plusBtn.setAttribute("aria-label", "Increase quantity");
+        controls.appendChild(plusBtn);
+
+        // Subtotal line
+        const subtotalEl = document.createElement("div");
+        subtotalEl.className = "cart-item-subtotal";
+        const sub = (Number(item.price) || 0) * (Number(item.quantity) || 0);
+        subtotalEl.textContent = "Subtotal: " + formatPrice(sub);
+        info.appendChild(subtotalEl);
+
+        info.appendChild(controls);
+        el.appendChild(info);
+
+        // Remove button
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "cart-item-remove";
+        removeBtn.textContent = "✕";
+        removeBtn.setAttribute("aria-label", "Remove item");
+        el.appendChild(removeBtn);
+
+        // ── Event Handlers ──────────────────────────────────────
+
+        minusBtn.addEventListener("click", () => {
+          const newQty = item.quantity - 1;
+          if (newQty <= 0) {
+            removeFromCart(item.productId);
+          } else {
+            updateQuantity(item.productId, newQty);
+          }
+          renderCart();
+        });
+
+        plusBtn.addEventListener("click", () => {
+          updateQuantity(item.productId, item.quantity + 1);
+          renderCart();
+        });
+
+        removeBtn.addEventListener("click", () => {
+          removeFromCart(item.productId);
+          renderCart();
+        });
+
+        cartItems.appendChild(el);
+      });
+
+      // Summary
+      const total = getCartTotal(cart);
+      const totalItems = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+cartSubtotal.textContent = formatPrice(total);
+      cartItemCount.textContent = String(totalItems);
+      cartTotal.textContent = formatPrice(total);
+    }
+
+    // ── Initial Load ─────────────────────────────────────────────
+    document.addEventListener("DOMContentLoaded", () => {
+      renderCart();
+    });
+  </script>
+</body>
+</html>
+

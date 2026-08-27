@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Create Store - HUSTLR</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your store on HUSTLR and start selling on campus.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="create-store.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+      </picture>
+      <h1>HUSTLR</h1>
+    </div>
+
+  <div>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html" id="authLink">Login</a>
+    </div>
+  </nav>
+
+  <!-- CREATE STORE SECTION -->
+  <section class="container create-store-container">
+    <h2>Welcome to Hustlr</h2>
+    <p class="subtitle">Let's create your store.</p>
+
+    <div class="create-store-card">
+      <form id="createStoreForm" novalidate>
+
+        <!-- Store Name -->
+        <div class="form-group">
+          <label for="storeName">Store Name</label>
+          <input
+            type="text"
+            id="storeName"
+            placeholder="e.g. Campus Bites"
+            required
+          />
+        </div>
+
+        <!-- Business Category -->
+        <div class="form-group">
+          <label for="category">Business Category</label>
+          <select id="category" required>
+            <option value="" disabled selected>Select a category</option>
+            <option value="Food">Food</option>
+            <option value="Tutoring">Tutoring</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Repairs">Repairs</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Printing">Printing</option>
+            <option value="Delivery">Delivery</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            placeholder="Tell customers what your store offers..."
+            required
+          ></textarea>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="e.g. 0821234567"
+            required
+          />
+        </div>
+
+        <!-- WhatsApp Number -->
+        <div class="form-group">
+          <label for="whatsapp">WhatsApp Number</label>
+          <input
+            type="tel"
+            id="whatsapp"
+            placeholder="e.g. 0821234567"
+            required
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="createStoreBtn"
+          class="create-store-btn"
+          disabled
+        >
+          Create Store
+        </button>
+
+      </form>
+
+      <!-- Status Message -->
+      <p id="createStoreStatus" class="create-store-status"></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+  </footer>
+
+  <script type="module" src="create-store.js"></script>
+  <script type="module" src="nav.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>My Store - HUSTLR</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your store on HUSTLR.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="my-store.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+  <!-- TODO: Re-enable reCAPTCHA before production. -->
+  <!-- Removed temporarily during development to focus on core features. -->
+  <!-- <script defer src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script> -->
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+      </picture>
+      <h1>HUSTLR</h1>
+    </div>
+
+    <div>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html" id="authLink">Login</a>
+    </div>
+  </nav>
+
+  <!-- LOADING STATE -->
+  <section class="container my-store-container" id="loadingState">
+    <div class="loading-spinner">
+      <div class="spinner-icon"></div>
+      <p class="loading-text">Loading your store...</p>
+    </div>
+  </section>
+
+  <!-- MY STORE CONTENT (hidden until loaded) -->
+  <section class="container my-store-container" id="myStoreContent" style="display:none;">
+
+    <h2>My Store</h2>
+    <p class="subtitle">Manage your business information.</p>
+
+    <!-- STORE PREVIEW CARD -->
+    <div class="store-preview-card" id="storePreviewCard">
+      <div class="preview-banner-wrapper">
+        <img id="previewBanner" class="preview-banner" src="" alt="Store banner" style="display:none;">
+        <div class="preview-banner-placeholder" id="previewBannerPlaceholder">
+          <span>Store Banner</span>
+        </div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-logo-wrapper">
+          <img id="previewLogo" class="preview-logo" src="" alt="Store logo" style="display:none;">
+        </div>
+        <div class="preview-info">
+          <div class="preview-name" id="previewName">Your Store Name</div>
+          <div class="preview-rating">
+            <span>★★★★☆</span>
+            <span class="preview-rating-value" id="previewRating">0.0</span>
+          </div>
+          <div class="preview-meta">
+            <span class="preview-category" id="previewCategory">Category</span>
+            <span class="preview-status-badge open" id="previewStatusBadge">Open</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORE FORM CARD -->
+    <div class="my-store-card">
+      <form id="myStoreForm" novalidate>
+
+        <!-- Logo Upload -->
+        <div class="form-group">
+          <label>Store Logo</label>
+          <div class="upload-area" id="logoUploadArea">
+            <input type="file" id="logoInput" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+            <img id="logoPreview" src="" alt="Logo preview" style="display:none;">
+            <span class="upload-icon" id="logoUploadIcon">🖼️</span>
+            <span class="upload-text" id="logoUploadText">Click to upload logo</span>
+            <span class="upload-hint">JPG, PNG or WEBP</span>
+            <div class="upload-spinner" id="logoUploadSpinner" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- Banner Upload -->
+        <div class="form-group">
+          <label>Store Banner</label>
+          <div class="upload-area" id="bannerUploadArea">
+            <input type="file" id="bannerInput" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+            <img id="bannerPreview" src="" alt="Banner preview" style="display:none;">
+            <span class="upload-icon" id="bannerUploadIcon">🌄</span>
+            <span class="upload-text" id="bannerUploadText">Click to upload banner</span>
+            <span class="upload-hint">JPG, PNG or WEBP</span>
+            <div class="upload-spinner" id="bannerUploadSpinner" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- Store Name -->
+        <div class="form-group">
+          <label for="storeName">Store Name <span style="color:#b1123a;">*</span></label>
+          <input
+            type="text"
+            id="storeName"
+            placeholder="e.g. Campus Bites"
+            required
+          />
+        </div>
+
+        <!-- Business Category (Read-only) -->
+        <div class="form-group">
+          <label>Business Category</label>
+          <div class="readonly-field" id="categoryDisplay">-</div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            placeholder="Tell customers what your store offers..."
+          ></textarea>
+        </div>
+
+        <!-- Phone & WhatsApp Row -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number <span style="color:#b1123a;">*</span></label>
+            <input
+              type="tel"
+              id="phone"
+              placeholder="e.g. 0821234567"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="whatsapp">WhatsApp Number <span style="color:#b1123a;">*</span></label>
+            <input
+              type="tel"
+              id="whatsapp"
+              placeholder="e.g. 0821234567"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Opening & Closing Time Row -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="openingTime">Opening Time</label>
+            <input
+              type="time"
+              id="openingTime"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="closingTime">Closing Time</label>
+            <input
+              type="time"
+              id="closingTime"
+            />
+          </div>
+        </div>
+
+        <!-- Delivery Fee -->
+        <div class="form-group">
+          <label for="deliveryFee">Delivery Fee (R)</label>
+          <input
+            type="number"
+            id="deliveryFee"
+            placeholder="0"
+            min="0"
+            step="0.50"
+          />
+        </div>
+
+        <!-- Toggle Switches -->
+        <div class="form-group">
+          <label>Store Settings</label>
+          <div style="background:#0f0f10; border-radius:8px; padding:0 14px; border:1px solid #2a2a2e;">
+
+            <div class="toggle-row">
+              <span class="toggle-label">Delivery Available</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="deliveryAvailable">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <span class="toggle-label">Collection Available</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="collectionAvailable">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <span class="toggle-label">Store Open</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="isOpen">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <button
+          type="submit"
+          id="saveBtn"
+          class="save-btn"
+          disabled
+        >
+          Save Changes
+        </button>
+
+      </form>
+
+      <!-- Status Message -->
+      <p id="myStoreStatus" class="my-store-status"></p>
+    </div>
+
+    <!-- FUTURE SECTIONS (Orders, Analytics, Reviews) -->
+    <div class="future-sections">
+      <a href="products.html" class="future-card-link">
+        <div class="future-card active" title="Manage your products">
+          <span class="future-icon">📦</span>
+          <h4>Products</h4>
+          <span class="future-badge active-badge">Manage</span>
+        </div>
+      </a>
+      <div class="future-card" title="Coming soon">
+        <span class="future-icon">📋</span>
+        <h4>Orders</h4>
+        <span class="future-badge">Coming Soon</span>
+      </div>
+      <div class="future-card" title="Coming soon">
+        <span class="future-icon">📊</span>
+        <h4>Analytics</h4>
+        <span class="future-badge">Coming Soon</span>
+      </div>
+      <div class="future-card" title="Coming soon">
+        <span class="future-icon">⭐</span>
+        <h4>Reviews</h4>
+        <span class="future-badge">Coming Soon</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+  </footer>
+
+  <script type="module" src="my-store.js"></script>
+  <script type="module" src="nav.js"></script>
+</body>
+</html>
+

@@ -1,61 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Login - HUSTLR</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script>
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+  <!-- TODO: Re-enable reCAPTCHA before production. -->
+  <!-- Removed temporarily during development to focus on core features. -->
+  <!-- <script defer src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script> -->
 </head>
 <body>
 
 <nav>
   <div class="brand">
-    <img class="brand-logo" src="assets/hustlr-logo.png" alt="Hustlr logo">
+    <picture>
+      <source type="image/webp" srcset="assets/hustlr-logo.png">
+      <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+    </picture>
     <h1>HUSTLR</h1>
   </div>
   <div>
     <a href="index.html">Home</a>
+    <a href="discover.html">Discover</a>
+    <a href="browse-stores.html">Browse Stores</a>
+    <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
     <a href="dashboard.html">Dashboard</a>
+    <span id="sellerNavLinks" style="display:none;"></span>
+    <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+    <a href="safety.html">Safety</a>
+    <a href="auth.html" id="authLink">Login</a>
   </div>
 </nav>
 
 
 <section class="container">
   <h2>Login</h2>
-  <p class="subtitle">Use your email and password to access your account.</p>
 
-  <div class="card">
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
+  <!-- Logged-in state (hidden by default) -->
+  <div id="loggedInState" class="card" style="display: none;">
+    <p style="font-size:1.1rem; margin-bottom:1rem;">You're already logged in as <strong id="loggedInEmail"></strong>.</p>
+    <p style="margin-bottom:1.5rem;">If you want to switch accounts, log out first.</p>
+    <button class="btn" id="authPageLogoutBtn">Logout</button>
+  </div>
 
-    <div class="form-actions">
-      <button class="btn" onclick="signup()">Sign Up</button>
-      <button class="btn" onclick="login()">Login</button>
-    </div>
+  <!-- Login/signup form (hidden when user is logged in) -->
+  <div id="authFormContainer">
+    <p class="subtitle">Use your email and password to access your account.</p>
 
-    <div class="form-links">
-      <a href="#" id="forgotPasswordLink">Forgot Password?</a>
-    </div>
+    <div class="card">
+      <input id="email" type="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
 
-    <label class="checkbox-row">
-      <input id="rememberMe" type="checkbox" />
-      <span>Remember Me</span>
-    </label>
+      <div class="form-actions">
+        <button class="btn" onclick="signup()">Sign Up</button>
+        <button class="btn" onclick="login()">Login</button>
+      </div>
+
+      <div class="form-links">
+        <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+      </div>
+
+      <label class="checkbox-row">
+        <input id="rememberMe" type="checkbox" />
+        <span>Remember Me</span>
+      </label>
 
     <p id="status"></p>
+    </div>
   </div>
 </section>
 
 <script type="module" src="auth.js"></script>
+<script type="module" src="nav.js"></script>
 <script type="module">
-  // UX hardening: if already logged in, don’t show login screen.
+  // When a logged-in user visits the auth page, show a message
+  // instead of silently redirecting — so they can intentionally log out.
   import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { auth } from "./firebase.js";
+  import { logoutUser } from "./nav.js";
+
+  const loggedInState = document.getElementById("loggedInState");
+  const authFormContainer = document.getElementById("authFormContainer");
+  const loggedInEmail = document.getElementById("loggedInEmail");
+  const authPageLogoutBtn = document.getElementById("authPageLogoutBtn");
+
   onAuthStateChanged(auth, (user) => {
-    if (user) window.location.href = "dashboard.html";
+    if (!user) {
+      // Not logged in → show the normal login/signup form
+      if (loggedInState) loggedInState.style.display = "none";
+      if (authFormContainer) authFormContainer.style.display = "block";
+      return;
+    }
+
+    // Logged in → hide the form, show the logged-in message
+    if (authFormContainer) authFormContainer.style.display = "none";
+    if (loggedInState) loggedInState.style.display = "block";
+    if (loggedInEmail) loggedInEmail.textContent = user.email || "Unknown";
+
+    // Wire up the logout button on the auth page
+    if (authPageLogoutBtn) {
+      // Replace any existing listener with a fresh one
+      const newBtn = authPageLogoutBtn.cloneNode(true);
+      authPageLogoutBtn.parentNode.replaceChild(newBtn, authPageLogoutBtn);
+
+      newBtn.addEventListener("click", async () => {
+        await logoutUser();
+      });
+    }
   });
 </script>
 </body>
 </html>
+

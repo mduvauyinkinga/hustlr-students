@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View and track your orders on HUSTLR - the student-powered campus marketplace.">
+  <title>My Orders - HUSTLR</title>
+<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="checkout.css">
+  <link rel="stylesheet" href="reviews.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+  <meta name="theme-color" content="#b1123a">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+      </picture>
+      <h1>HUSTLR</h1>
+    </div>
+
+    <div>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="customer-orders.html">My Orders</a>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html" id="authLink">Login</a>
+    </div>
+  </nav>
+
+  <!-- LOADING STATE -->
+  <div id="ordersLoading" class="checkout-loading" style="display: none;">
+    <div class="spinner"></div>
+    <p>Loading your orders...</p>
+  </div>
+
+  <!-- AUTH REQUIRED STATE -->
+  <div id="ordersAuthRequired" class="checkout-empty" style="display: none;">
+    <span class="empty-icon">🔒</span>
+    <h3>Sign in to view your orders</h3>
+    <p>You need to be logged in to see your order history.</p>
+    <a href="auth.html" class="btn">Sign In</a>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="ordersEmpty" class="checkout-empty" style="display: none;">
+    <span class="empty-icon">📋</span>
+    <h3>No orders yet</h3>
+    <p>When you place orders, they will appear here.</p>
+    <a href="browse-stores.html" class="btn">Browse Stores</a>
+  </div>
+
+  <!-- ORDERS CONTENT -->
+  <div id="ordersContent" class="checkout-page" style="display: none;">
+
+    <h1 class="checkout-page-title">My Orders</h1>
+    <p class="checkout-subtitle">View and track all your orders.</p>
+
+    <!-- Filter Tabs -->
+    <div class="order-filter-tabs" id="customerOrderFilters">
+      <button class="order-filter-btn active" data-filter="all">All</button>
+      <button class="order-filter-btn" data-filter="active">Active</button>
+      <button class="order-filter-btn" data-filter="completed">Completed</button>
+      <button class="order-filter-btn" data-filter="cancelled">Cancelled</button>
+    </div>
+
+    <!-- Error State -->
+    <div id="ordersError" class="empty-state" style="display: none;">
+      <span class="empty-icon">⚠️</span>
+      <h3>Error Loading Orders</h3>
+      <p>We couldn't load your orders. Please try refreshing the page.</p>
+      <button class="btn" onclick="location.reload()">Refresh</button>
+    </div>
+
+    <!-- Orders List -->
+    <div class="order-list" id="customerOrdersList"></div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+  </footer>
+
+  <script type="module" src="customer-orders.js"></script>
+  <script type="module" src="nav.js"></script>
+</body>
+</html>

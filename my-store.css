@@ -1,0 +1,558 @@
+/* ── My Store Page ──────────────────────────────────────────────── */
+
+.my-store-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.my-store-container h2 {
+  font-size: 32px;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.my-store-container .subtitle {
+  color: #bbb;
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
+/* ── Store Preview Card ─────────────────────────────────────────── */
+
+.store-preview-card {
+  background: #1a1a1d;
+  border-radius: 12px;
+  border: 1px solid #2a2a2e;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.preview-banner-wrapper {
+  width: 100%;
+  height: 160px;
+  background: #12090d;
+  overflow: hidden;
+  position: relative;
+}
+
+.preview-banner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-banner-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-size: 13px;
+}
+
+.preview-body {
+  padding: 16px 20px 20px;
+  position: relative;
+}
+
+.preview-logo-wrapper {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid #1a1a1d;
+  overflow: hidden;
+  background: #2a2a2e;
+  margin-top: -52px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.preview-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.preview-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.preview-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #f2c94c;
+  font-size: 15px;
+}
+
+.preview-rating-value {
+  color: #bbb;
+  font-size: 13px;
+}
+
+.preview-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.preview-status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-status-badge.open {
+  background: #1a3a1a;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+
+.preview-status-badge.closed {
+  background: #3a1a1a;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.preview-category {
+  color: #999;
+  font-size: 13px;
+}
+
+/* ── My Store Card ──────────────────────────────────────────────── */
+
+.my-store-card {
+  background: #1a1a1d;
+  padding: 28px 24px;
+  border-radius: 12px;
+  border: 1px solid #2a2a2e;
+  margin-bottom: 28px;
+}
+
+.my-store-card .form-group {
+  margin-bottom: 18px;
+}
+
+.my-store-card label {
+  display: block;
+  color: #ccc;
+  font-size: 13px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.my-store-card input,
+.my-store-card textarea,
+.my-store-card select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #2a2a2e;
+  outline: none;
+  background: #0f0f10;
+  color: white;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.my-store-card input:focus,
+.my-store-card textarea:focus,
+.my-store-card select:focus {
+  border-color: #b1123a;
+}
+
+.my-store-card textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.my-store-card input:disabled,
+.my-store-card textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.my-store-card select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.my-store-card select option {
+  background: #1a1a1d;
+  color: white;
+}
+
+/* ── Read-only Category Display ─────────────────────────────────── */
+
+.readonly-field {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #2a2a2e;
+  background: #0f0f10;
+  color: #999;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+/* ── Form Row (side-by-side) ────────────────────────────────────── */
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* ── Upload Areas ───────────────────────────────────────────────── */
+
+.upload-area {
+  position: relative;
+  border: 2px dashed #2a2a2e;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0f0f10;
+}
+
+.upload-area:hover {
+  border-color: #b1123a;
+  background: #1a1a1d;
+}
+
+.upload-area.has-image {
+  border-style: solid;
+  padding: 4px;
+}
+
+.upload-area input[type="file"] {
+  display: none;
+}
+
+.upload-area .upload-icon {
+  font-size: 28px;
+  color: #555;
+  line-height: 1;
+}
+
+.upload-area .upload-text {
+  color: #777;
+  font-size: 13px;
+}
+
+.upload-area .upload-hint {
+  color: #555;
+  font-size: 11px;
+}
+
+.upload-area img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+.upload-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #b1123a;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* ── Toggle Switch ──────────────────────────────────────────────── */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #0f0f10;
+}
+
+.toggle-row:last-child {
+  border-bottom: none;
+}
+
+.toggle-label {
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #2a2a2e;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #666;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #b1123a;
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(22px);
+  background-color: #ffffff;
+}
+
+.toggle-switch input:disabled + .toggle-slider {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Save Button ────────────────────────────────────────────────── */
+
+.save-btn {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #b1123a;
+  color: white;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  margin-top: 8px;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #8e0e2f;
+}
+
+.save-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Inline Spinner (for save button) ──────────────────────────── */
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* ── Status / Error Messages ────────────────────────────────────── */
+
+.my-store-status {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #ccc;
+  text-align: center;
+  min-height: 20px;
+}
+
+.my-store-status.error {
+  color: #e74c3c;
+}
+
+.my-store-status.success {
+  color: #2ecc71;
+}
+
+/* ── Loading Spinner ────────────────────────────────────────────── */
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+}
+
+.loading-spinner .spinner-icon {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #b1123a;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.loading-spinner .loading-text {
+  color: #777;
+  font-size: 14px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Future Sections (Products, Orders, etc.) ───────────────────── */
+
+.future-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.future-card-link {
+  text-decoration: none;
+  display: block;
+}
+
+.future-card {
+  background: #1a1a1d;
+  border: 1px solid #2a2a2e;
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: not-allowed;
+  opacity: 0.55;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+  user-select: none;
+}
+
+.future-card:hover {
+  opacity: 0.7;
+}
+
+.future-card.active {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.future-card.active:hover {
+  border-color: #b1123a;
+  opacity: 0.9;
+}
+
+.future-card .active-badge {
+  background: #b1123a;
+  color: #ffffff;
+}
+
+.future-card .future-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.future-card h4 {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.future-card .future-badge {
+  display: inline-block;
+  background: #2a2a2e;
+  color: #777;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .my-store-container {
+    padding: 24px 16px;
+  }
+
+  .my-store-card {
+    padding: 20px 16px;
+  }
+
+  .my-store-container h2 {
+    font-size: 26px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .preview-banner-wrapper {
+    height: 120px;
+  }
+
+  .preview-logo-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-top: -44px;
+  }
+
+  .future-sections {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

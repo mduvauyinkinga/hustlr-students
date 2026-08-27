@@ -1,27 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Safety - HUSTLR</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Student-powered campus marketplace for services, deliveries and errands.">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script>
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+<!-- TODO: Re-enable reCAPTCHA before production. -->
+<!-- Removed temporarily during development to focus on core features. -->
+<!-- <script defer src="https://www.google.com/recaptcha/enterprise.js?render=6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf"></script> -->
 </head>
 <body>
 
 <nav>
   <div class="brand">
-    <img class="brand-logo" src="assets/hustlr-logo.png" alt="Hustlr logo">
+    <picture>
+      <source type="image/webp" srcset="assets/hustlr-logo.png">
+      <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+    </picture>
     <h1>HUSTLR</h1>
   </div>
+
   <div>
     <a href="index.html">Home</a>
-    <a href="services.html">Services</a>
-    <a href="post.html">Post</a>
+    <a href="discover.html">Discover</a>
+    <a href="browse-stores.html">Browse Stores</a>
+    <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
     <a href="dashboard.html">Dashboard</a>
+    <span id="sellerNavLinks" style="display:none;"></span>
+    <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
     <a href="safety.html">Safety</a>
-
+    <a href="auth.html" id="authLink">Login</a>
   </div>
 </nav>
 
@@ -37,6 +48,7 @@
   </div>
 </section>
 
-<script type="module" src="script.js"></script>
+<script type="module" src="nav.js"></script>
 </body>
 </html>
+

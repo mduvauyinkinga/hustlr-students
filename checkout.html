@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Checkout and place your order on HUSTLR - the student-powered campus marketplace.">
+  <title>Checkout - HUSTLR</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="checkout.css">
+  <link rel="icon" href="assets/hustlr-logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/hustlr-logo.png">
+  <meta name="theme-color" content="#b1123a">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand">
+      <picture>
+        <source type="image/webp" srcset="assets/hustlr-logo.png">
+        <img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="Hustlr logo" loading="eager">
+      </picture>
+      <h1>HUSTLR</h1>
+    </div>
+
+    <div>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="browse-stores.html">Browse Stores</a>
+      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="dashboard.html">Dashboard</a>
+      <span id="sellerNavLinks" style="display:none;"></span>
+      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+      <a href="safety.html">Safety</a>
+      <a href="auth.html" id="authLink">Login</a>
+    </div>
+  </nav>
+
+  <!-- LOADING STATE -->
+  <div id="checkoutLoading" class="checkout-loading" style="display: none;">
+    <div class="spinner"></div>
+    <p>Loading checkout...</p>
+  </div>
+
+  <!-- EMPTY CART STATE -->
+  <div id="checkoutEmpty" class="checkout-empty" style="display: none;">
+    <span class="empty-icon">🛒</span>
+    <h3>Your cart is empty</h3>
+    <p>Add items to your cart before checking out.</p>
+    <a href="browse-stores.html" class="btn">Browse Stores</a>
+  </div>
+
+<!-- ORDER CONFIRMATION STATE -->
+  <div id="checkoutConfirmation" class="checkout-confirmation" style="display: none;">
+    <span class="confirm-icon">✅</span>
+    <h2>Order placed successfully!</h2>
+    <p>Your order has been submitted. The store will process it shortly.</p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+      <a href="customer-orders.html" class="btn">View My Orders</a>
+      <a href="browse-stores.html" class="btn" style="background:#2a2a2e; color:#fff;">Continue Shopping</a>
+    </div>
+  </div>
+
+  <!-- CHECKOUT CONTENT -->
+  <div id="checkoutContent" class="checkout-page" style="display: none;">
+
+    <h1 class="checkout-page-title">Checkout</h1>
+    <p class="checkout-subtitle">Review your order and provide your details.</p>
+
+    <!-- Order Review Section -->
+    <div class="checkout-section">
+      <div class="checkout-section-title">Order Review</div>
+      <p id="checkoutStoreName" class="checkout-store-name"></p>
+      <div id="checkoutItems" class="checkout-items"></div>
+<div id="checkoutSummary" class="checkout-summary">
+        <div class="checkout-summary-row">
+          <span>Subtotal</span>
+          <span id="checkoutSubtotal">R0.00</span>
+        </div>
+        <div class="checkout-summary-row">
+          <span>Items</span>
+          <span id="checkoutItemCount">0</span>
+        </div>
+        <div class="checkout-summary-row" id="checkoutDeliveryFeeRow" style="display:none;">
+          <span>Delivery Fee</span>
+          <span id="checkoutDeliveryFee">R0.00</span>
+        </div>
+        <div class="checkout-summary-row checkout-summary-total">
+          <span>Total</span>
+          <span id="checkoutTotal">R0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Details Section -->
+    <div class="checkout-section">
+      <div class="checkout-section-title">Your Details</div>
+
+      <form id="checkoutForm" class="checkout-form" novalidate>
+
+        <!-- Name -->
+        <div class="form-field">
+          <label for="customerName">Full Name *</label>
+          <input
+            type="text"
+            id="customerName"
+            placeholder="e.g. Thabo Mokoena"
+            autocomplete="name"
+            required
+          >
+          <span class="field-error" id="nameError">Please enter your name.</span>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-field">
+          <label for="customerPhone">Phone Number *</label>
+          <input
+            type="tel"
+            id="customerPhone"
+            placeholder="e.g. 0712345678"
+            autocomplete="tel"
+            required
+          >
+          <span class="field-error" id="phoneError">Please enter a valid South African phone number.</span>
+        </div>
+
+        <!-- Order Type -->
+        <div class="form-field">
+          <label>Order Type *</label>
+          <div class="order-type-group">
+            <div class="order-type-option">
+              <input type="radio" id="orderTypeCollection" name="orderType" value="collection" checked>
+              <label for="orderTypeCollection" class="order-type-label">
+                <span class="order-type-icon">📍</span>
+                Collection
+              </label>
+            </div>
+            <div class="order-type-option">
+              <input type="radio" id="orderTypeDelivery" name="orderType" value="delivery">
+              <label for="orderTypeDelivery" class="order-type-label">
+                <span class="order-type-icon">🚚</span>
+                Delivery
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address (conditional) -->
+        <div class="form-field" id="addressField">
+          <label for="deliveryAddress">Delivery Address *</label>
+          <textarea
+            id="deliveryAddress"
+            placeholder="e.g. Block C, Room 12, Res Name"
+            rows="2"
+          ></textarea>
+          <span class="field-error" id="addressError">Please enter your delivery address.</span>
+        </div>
+
+        <!-- Submit -->
+        <div class="checkout-submit-area">
+          <button type="submit" id="placeOrderBtn" class="checkout-submit-btn" disabled>
+            Place Order
+          </button>
+        </div>
+
+        <!-- Status message -->
+        <div id="checkoutStatus" class="checkout-status"></div>
+
+      </form>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 HUSTLR. Built for students by KTM Tech. All rights reserved.
+  </footer>
+
+  <script type="module" src="checkout.js"></script>
+  <script type="module" src="nav.js"></script>
+</body>
+</html>
+

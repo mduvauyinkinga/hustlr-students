@@ -1,0 +1,155 @@
+/* ── Create Store Page ────────────────────────────────────────────── */
+
+.create-store-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.create-store-container h2 {
+  font-size: 32px;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.create-store-container .subtitle {
+  color: #bbb;
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
+/* ── Form Card ──────────────────────────────────────────────────── */
+
+.create-store-card {
+  background: #1a1a1d;
+  padding: 28px 24px;
+  border-radius: 12px;
+  border: 1px solid #2a2a2e;
+}
+
+.create-store-card .form-group {
+  margin-bottom: 18px;
+}
+
+.create-store-card label {
+  display: block;
+  color: #ccc;
+  font-size: 13px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.create-store-card input,
+.create-store-card textarea,
+.create-store-card select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #2a2a2e;
+  outline: none;
+  background: #0f0f10;
+  color: white;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.create-store-card input:focus,
+.create-store-card textarea:focus,
+.create-store-card select:focus {
+  border-color: #b1123a;
+}
+
+.create-store-card textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.create-store-card select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.create-store-card select option {
+  background: #1a1a1d;
+  color: white;
+}
+
+/* ── Create Store Button ────────────────────────────────────────── */
+
+.create-store-btn {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #b1123a;
+  color: white;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  margin-top: 8px;
+}
+
+.create-store-btn:hover:not(:disabled) {
+  background: #8e0e2f;
+}
+
+.create-store-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Status / Error Messages ────────────────────────────────────── */
+
+.create-store-status {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #ccc;
+  text-align: center;
+  min-height: 20px;
+}
+
+.create-store-status.error {
+  color: #e74c3c;
+}
+
+.create-store-status.success {
+  color: #2ecc71;
+}
+
+/* ── Loading Spinner ────────────────────────────────────────────── */
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .create-store-container {
+    padding: 24px 16px;
+  }
+
+  .create-store-card {
+    padding: 20px 16px;
+  }
+
+  .create-store-container h2 {
+    font-size: 26px;
+  }
+}
+
