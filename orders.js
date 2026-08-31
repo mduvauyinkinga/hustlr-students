@@ -236,16 +236,26 @@ export async function createOrder(params) {
     return { success: true, ...result.data };
   } catch (err) {
     logError("CREATE_ORDER_FAILED");
+    // Keep production-safe messages but log enough detail for debugging.
+    // err.code may be "functions/*" (callable rejected by backend) or
+    // "app-check/*" (App Check could not mint/verify a token client-side).
+    console.error("[HUSTLR:CREATE_ORDER_DIAG]", { code: err?.code, message: err?.message });
     const errorMessages = {
       "functions/unauthenticated": "You must be logged in to place an order.",
       "functions/permission-denied": "You don't have permission to place an order.",
-      "functions/not-found": "One of the products is no longer available.",
-      "functions/invalid-argument": "Some order information is invalid.",
+      "functions/not-found": "The order service could not be reached, or a product is no longer available.",
+      "functions/invalid-argument": "Some order information is invalid. Please review your order and try again.",
       "functions/failed-precondition": "The order cannot be placed with the selected products or delivery method.",
-      "functions/already-exists": "This order request has already been used for a different cart. Please review your order and try again."
+      "functions/already-exists": "This order request has already been used for a different cart. Please review your order and try again.",
+      "functions/unavailable": "The order service is temporarily unavailable. Please try again in a moment.",
+      "functions/deadline-exceeded": "The order service is taking too long to respond. Please try again.",
+      "functions/internal": "The order service hit an internal error. Please try again.",
+      "functions/resource-exhausted": "The order service is busy right now. Please try again shortly.",
+      "app-check/recaptcha-error": "Your browser failed the security check. Please refresh the page and try again.",
+      "app-check/throttled": "The security check is temporarily blocked. Please try again later."
     };
     const message = errorMessages[err?.code] || "Failed to place your order. Please try again.";
-    return { success: false, error: message };
+    return { success: false, error: message, code: err?.code };
   }
 }
 
@@ -275,15 +285,19 @@ export async function updateOrderStatus(orderId, newStatus, note = "") {
     return { success: true, ...(result && result.data ? result.data : {}) };
   } catch (err) {
     logError("UPDATE_ORDER_STATUS_FAILED");
+    console.error("[HUSTLR:UPDATE_ORDER_STATUS_DIAG]", { code: err?.code, message: err?.message });
     const errorMessages = {
       "functions/unauthenticated": "You must be logged in to update this order.",
       "functions/permission-denied": "You don't have permission to update this order.",
       "functions/not-found": "Order not found.",
       "functions/invalid-argument": "The requested status is invalid.",
-      "functions/failed-precondition": err?.message || "This status change is not allowed."
+      "functions/failed-precondition": err?.message || "This status change is not allowed.",
+      "functions/unavailable": "The order service is temporarily unavailable. Please try again in a moment.",
+      "app-check/recaptcha-error": "Your browser failed the security check. Please refresh the page and try again.",
+      "app-check/throttled": "The security check is temporarily blocked. Please try again later."
     };
     const message = errorMessages[err?.code] || "Failed to update order status. Please try again.";
-    return { success: false, error: message };
+    return { success: false, error: message, code: err?.code };
   }
 }
 

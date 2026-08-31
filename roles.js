@@ -7,18 +7,17 @@
  * Architecture:
  *   Authentication → Firestore role → Continue
  *
- * Usage:
- *   import { isSeller, requireSeller, upgradeToSeller, ... } from "./roles.js";
+ * Seller activation is backend-authoritative. Browser code may request
+ * verification but must never directly write the seller role.
  */
 
-import { auth, db } from "./firebase.js";
+import { auth, db, functions } from "./firebase.js";
 import { ensureUserDocument } from "./user-initialization.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
 
 import {
   doc,
-  getDoc,
-  updateDoc,
-  serverTimestamp
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ── Constants ─────────────────────────────────────────────────────
@@ -41,13 +40,6 @@ export function clearCachedRole() {
 
 // ── Firestore Role Fetch ──────────────────────────────────────────
 
-/**
- * Fetch the user's role from Firestore.
- * Returns null if the authoritative role cannot be read.
- *
- * @param {string} uid
- * @returns {Promise<string|null>}
- */
 async function fetchRoleFromFirestore(uid) {
   if (!uid) return null;
 
@@ -68,13 +60,6 @@ async function fetchRoleFromFirestore(uid) {
   }
 }
 
-// ── Public API ────────────────────────────────────────────────────
-
-/**
- * Get the current user's role.
- * Reads the role from Firestore after ensuring the user document exists.
- * @returns {Promise<string|null>}
- */
 export async function getCurrentUserRole() {
   const user = auth.currentUser;
   if (!user) return null;
@@ -84,18 +69,12 @@ export async function getCurrentUserRole() {
   return await fetchRoleFromFirestore(user.uid);
 }
 
-/**
- * Force-refresh the role from Firestore.
- * Updates the cache and dispatches a 'roleChanged' event.
- * @returns {Promise<string|null>}
- */
 export async function refreshUserRole() {
   const user = auth.currentUser;
   if (!user) return null;
 
   const role = await fetchRoleFromFirestore(user.uid);
 
-  // Dispatch a custom event so other modules can react
   if (role) {
     window.dispatchEvent(new CustomEvent("roleChanged", { detail: { role } }));
   }
@@ -103,28 +82,16 @@ export async function refreshUserRole() {
   return role;
 }
 
-/**
- * Check if the current user is a customer.
- * @returns {Promise<boolean>}
- */
 export async function isCustomer() {
   const role = await getCurrentUserRole();
   return role === CUSTOMER_ROLE;
 }
 
-/**
- * Check if the current user is a seller.
- * @returns {Promise<boolean>}
- */
 export async function isSeller() {
   const role = await getCurrentUserRole();
   return role === SELLER_ROLE;
 }
 
-/**
- * Check if the current user is an admin.
- * @returns {Promise<boolean>}
- */
 export async function isAdmin() {
   const user = auth.currentUser;
   if (!user) return false;
@@ -137,17 +104,11 @@ export async function isAdmin() {
   }
 }
 
-/**
- * Require the user to be a seller.
- * Redirects to dashboard if not a seller.
- * @returns {Promise<boolean>} — true if seller, false if redirected
- */
 export async function requireSeller() {
   const role = await getCurrentUserRole();
 
   if (role === SELLER_ROLE) return true;
 
-  // Prevent redirect loops: if already on dashboard, don't redirect again
   const currentPage = window.location.pathname.split("/").pop() || "index.html";
   if (currentPage !== "dashboard.html") {
     window.location.href = "dashboard.html";
@@ -155,11 +116,6 @@ export async function requireSeller() {
   return false;
 }
 
-/**
- * Require the user to be a customer.
- * Redirects to dashboard if not a customer.
- * @returns {Promise<boolean>} — true if customer, false if redirected
- */
 export async function requireCustomer() {
   const role = await getCurrentUserRole();
 
@@ -172,11 +128,6 @@ export async function requireCustomer() {
   return false;
 }
 
-/**
- * Require the user to be authenticated (any role).
- * Redirects to auth page if not logged in.
- * @returns {Promise<boolean>} — true if authenticated, false if redirected
- */
 export async function requireAuthenticatedUser() {
   const user = auth.currentUser;
   if (user) {
@@ -192,10 +143,8 @@ export async function requireAuthenticatedUser() {
 }
 
 /**
- * Upgrade the current user to seller role.
- * Updates Firestore, refreshes cache, and dispatches roleChanged event.
- *
- * @returns {Promise<{success: boolean, error?: string}>}
+ * Seller activation is only permitted through the trusted backend
+ * after a verified PayPal subscription is active.
  */
 export async function upgradeToSeller() {
   const user = auth.currentUser;
@@ -204,42 +153,26 @@ export async function upgradeToSeller() {
   }
 
   try {
-    const userRef = doc(db, "users", user.uid);
+    const fn = httpsCallable(functions, "activateSellerIfEligible");
+    const result = await fn({});
 
-    await ensureUserDocument(user);
-
-    // First check if document exists
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      // Update existing document with merge to preserve other fields
-      await updateDoc(userRef, {
-        role: SELLER_ROLE,
-        updatedAt: serverTimestamp()
-      });
+    if (result?.data?.activated) {
+      window.dispatchEvent(new CustomEvent("roleChanged", { detail: { role: SELLER_ROLE } }));
+      return { success: true };
     }
 
-    // Dispatch role change event
-    window.dispatchEvent(new CustomEvent("roleChanged", { detail: { role: SELLER_ROLE } }));
-
-    return { success: true };
+    return {
+      success: false,
+      error: result?.data?.message || "Seller activation is still pending verified subscription status."
+    };
   } catch (err) {
     const message =
-      err?.code === "permission-denied"
-        ? "You don't have permission to upgrade your role."
-        : err?.code === "unavailable"
-        ? "The service is temporarily unavailable. Please try again."
-        : "Failed to upgrade your account. Please try again.";
+      err?.message || "Failed to activate the seller account. Please try again.";
 
     return { success: false, error: message };
   }
 }
 
-/**
- * Listen for role changes and execute a callback.
- * @param {function} callback — Called with { role } on role change
- * @returns {function} — Unsubscribe function
- */
 export function onRoleChanged(callback) {
   const handler = (event) => {
     if (callback) callback(event.detail);
@@ -247,7 +180,6 @@ export function onRoleChanged(callback) {
 
   window.addEventListener("roleChanged", handler);
 
-  // Return unsubscribe function
   return () => {
     window.removeEventListener("roleChanged", handler);
   };

@@ -27,21 +27,25 @@ service firebase.storage {
     }
 
     // Product uploads are owned by the seller recorded on the product document.
-    match /products/{sellerId}/{productId}.jpg {
+    match /products/{sellerId}/{fileName} {
       allow read: if true;
       allow create, update: if isActiveSeller() &&
         request.auth.uid == sellerId &&
-        firestore.exists(/databases/(default)/documents/products/$(productId)) &&
-        firestore.get(/databases/(default)/documents/products/$(productId)).data.ownerId == request.auth.uid &&
-        firestore.get(/databases/(default)/documents/products/$(productId)).data.storeId == request.auth.uid &&
+        fileName.matches('^[^/]+\\.jpg$') &&
+        firestore.exists(/databases/(default)/documents/products/$(fileName.split('.')[0])) &&
+        firestore.exists(/databases/(default)/documents/productPrivate/$(fileName.split('.')[0])) &&
+        firestore.get(/databases/(default)/documents/productPrivate/$(fileName.split('.')[0])).data.ownerId == request.auth.uid &&
+        firestore.get(/databases/(default)/documents/products/$(fileName.split('.')[0])).data.storeId == request.auth.uid &&
         isAllowedImage() &&
         request.resource.size > 0 &&
         request.resource.size <= 5 * 1024 * 1024;
       allow delete: if isActiveSeller() &&
         request.auth.uid == sellerId &&
-        firestore.exists(/databases/(default)/documents/products/$(productId)) &&
-        firestore.get(/databases/(default)/documents/products/$(productId)).data.ownerId == request.auth.uid &&
-        firestore.get(/databases/(default)/documents/products/$(productId)).data.storeId == request.auth.uid;
+        fileName.matches('^[^/]+\\.jpg$') &&
+        firestore.exists(/databases/(default)/documents/products/$(fileName.split('.')[0])) &&
+        firestore.exists(/databases/(default)/documents/productPrivate/$(fileName.split('.')[0])) &&
+        firestore.get(/databases/(default)/documents/productPrivate/$(fileName.split('.')[0])).data.ownerId == request.auth.uid &&
+        firestore.get(/databases/(default)/documents/products/$(fileName.split('.')[0])).data.storeId == request.auth.uid;
     }
 
     // Store media is owned by the seller whose UID is the store document ID.
@@ -51,7 +55,6 @@ service firebase.storage {
         request.auth.uid == sellerId &&
         fileName in ['logo.jpg', 'banner.jpg'] &&
         firestore.exists(/databases/(default)/documents/stores/$(sellerId)) &&
-        firestore.get(/databases/(default)/documents/stores/$(sellerId)).data.ownerId == request.auth.uid &&
         isAllowedImage() &&
         request.resource.size > 0 &&
         request.resource.size <= 10 * 1024 * 1024;
@@ -59,7 +62,7 @@ service firebase.storage {
         request.auth.uid == sellerId &&
         fileName in ['logo.jpg', 'banner.jpg'] &&
         firestore.exists(/databases/(default)/documents/stores/$(sellerId)) &&
-        firestore.get(/databases/(default)/documents/stores/$(sellerId)).data.ownerId == request.auth.uid;
+        firestore.get(/databases/(default)/documents/stores/$(sellerId)).data.status == 'active';
     }
 
     // Deny every unrecognized path, including path traversal or arbitrary uploads.

@@ -28,7 +28,7 @@
  * @module reviews
  */
 
-import { auth, db } from "./firebase.js";
+import { auth, db, functions } from "./firebase.js";
 import { logError } from "./production-logger.js";
 
 import {
@@ -46,6 +46,7 @@ import {
   writeBatch,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
 
 // ────────────────────────────────────────────────────────────
 // 1. CONSTANTS
@@ -480,6 +481,9 @@ export async function createReview(params) {
   }
 
   try {
+    const callable = httpsCallable(functions, "createReview");
+    return { success: true, ...(await callable({ orderId, rating, comment: comment.trim() })).data };
+
     // Fetch the order to get store + seller info
     const orderRef = doc(db, "orders", orderId);
     const orderSnap = await getDoc(orderRef);
@@ -614,6 +618,9 @@ export async function updateReview(orderId, updates) {
   }
 
   try {
+    const callable = httpsCallable(functions, "updateReview");
+    return { success: true, ...(await callable({ orderId, rating, comment: comment?.trim() })).data };
+
     const reviewRef = doc(db, REVIEWS_COLLECTION, orderId);
     const reviewSnap = await getDoc(reviewRef);
 
@@ -718,6 +725,9 @@ export async function softDeleteReview(orderId) {
   }
 
   try {
+    const callable = httpsCallable(functions, "deleteReview");
+    return { success: true, ...(await callable({ orderId })).data };
+
     const reviewRef = doc(db, REVIEWS_COLLECTION, orderId);
     const reviewSnap = await getDoc(reviewRef);
 
@@ -810,6 +820,9 @@ export async function replyToReview(orderId, replyText) {
   }
 
   try {
+    const callable = httpsCallable(functions, "replyToReview");
+    return { success: true, ...(await callable({ orderId, replyText: replyText.trim() })).data };
+
     const reviewRef = doc(db, REVIEWS_COLLECTION, orderId);
     const reviewSnap = await getDoc(reviewRef);
 
@@ -869,6 +882,9 @@ export async function editSellerReply(orderId, replyText) {
   }
 
   try {
+    const callable = httpsCallable(functions, "editSellerReply");
+    return { success: true, ...(await callable({ orderId, replyText: replyText && replyText.trim() ? replyText.trim() : null })).data };
+
     const reviewRef = doc(db, REVIEWS_COLLECTION, orderId);
     const reviewSnap = await getDoc(reviewRef);
 

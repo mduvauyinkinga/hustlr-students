@@ -14,8 +14,9 @@
  * It also requires that auth state listener runs on the page.
  */
 
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getCurrentUserRole, isSeller, isCustomer, clearCachedRole } from "./roles.js";
 
 // ── Helpers ───────────────────────────────────────────────────────
@@ -95,37 +96,60 @@ function teardownLogoutLink(link) {
   }
 }
 
+async function getPendingSellerStoreState(uid) {
+  if (!uid) return null;
+
+  try {
+    const storeSnap = await getDoc(doc(db, "stores", uid));
+    if (!storeSnap.exists()) return null;
+
+    const store = storeSnap.data() || {};
+    if (store.status === "pending_subscription" || store.status === "pending") {
+      return store;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function applySellerLinkState(becomeSellerLink, role, pendingStore) {
+  if (!becomeSellerLink) return;
+
+  if (role === "customer") {
+    becomeSellerLink.style.display = "inline";
+    becomeSellerLink.href = pendingStore ? "subscription.html" : "create-store.html";
+    becomeSellerLink.textContent = pendingStore ? "Complete Seller Setup" : "Create Store";
+    return;
+  }
+
+  becomeSellerLink.style.display = "none";
+  becomeSellerLink.textContent = "Create Store";
+  becomeSellerLink.href = "create-store.html";
+}
+
 // ── Auth State Listener ───────────────────────────────────────────
 
 onAuthStateChanged(auth, async (user) => {
-  // --- Become a Seller link ---
   const becomeSellerLink = document.getElementById("becomeSellerLink");
   if (becomeSellerLink) {
     becomeSellerLink.style.display = "none";
   }
 
-  // --- Login ↔ Logout toggle ---
   const authLink = getAuthNavLink();
 
   if (user && authLink) {
-    // Logged in → show "Logout" (click is handled via JS, href="#" prevents page jump)
     authLink.textContent = "Logout";
     authLink.href = "#";
     setupLogoutLink(authLink);
 
-    // Determine role using roles.js (cache-first, Firestore fallback)
     const role = await getCurrentUserRole();
+    const pendingStore = role === "customer" ? await getPendingSellerStoreState(user.uid) : null;
 
-    // Show "Become a Seller" for customers only
     if (becomeSellerLink) {
-      if (role === "customer") {
-        becomeSellerLink.style.display = "inline";
-      }
+      applySellerLinkState(becomeSellerLink, role, pendingStore);
     }
 
-    // --- Dynamic seller nav links ---
-    // Inject seller-specific links (My Store, Products, Orders) into the nav.
-    // Dashboard is already a static link on every page.
     const sellerNavLinks = document.getElementById("sellerNavLinks");
     if (sellerNavLinks) {
       if (role === "seller") {
@@ -141,12 +165,10 @@ onAuthStateChanged(auth, async (user) => {
       }
     }
   } else if (!user && authLink) {
-    // Logged out → show "Login"
     teardownLogoutLink(authLink);
     authLink.textContent = "Login";
     authLink.href = "auth.html";
 
-    // Clear seller nav links when logged out
     const sellerNavLinks = document.getElementById("sellerNavLinks");
     if (sellerNavLinks) {
       sellerNavLinks.innerHTML = "";
@@ -158,18 +180,16 @@ onAuthStateChanged(auth, async (user) => {
 // ── Inject Discover link into the nav ──────────────────────────────
 ensureDiscoverLink();
 
-// ── Listen for role changes from other modules (e.g. after upgrade) ──
-// This ensures the nav updates without a page refresh when a user upgrades
-// to seller via create-store.js.
 window.addEventListener("roleChanged", async (event) => {
   const { role } = event.detail || {};
 
   const becomeSellerLink = document.getElementById("becomeSellerLink");
   if (becomeSellerLink) {
-    becomeSellerLink.style.display = role === "customer" ? "inline" : "none";
+    const pendingStore = role === "customer" ? await getPendingSellerStoreState(auth.currentUser?.uid) : null;
+    applySellerLinkState(becomeSellerLink, role, pendingStore);
   }
 
-const sellerNavLinks = document.getElementById("sellerNavLinks");
+  const sellerNavLinks = document.getElementById("sellerNavLinks");
   if (sellerNavLinks) {
     if (role === "seller") {
       sellerNavLinks.innerHTML = `
