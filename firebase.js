@@ -7,7 +7,7 @@ import { getFunctions } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 
 import {
   initializeAppCheck,
-  ReCaptchaV3Provider
+  ReCaptchaEnterpriseProvider
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -27,13 +27,13 @@ const firebaseConfig = {
 const apps = getApps();
 const app = apps.length ? apps[0] : initializeApp(firebaseConfig);
 
-// Firebase App Check (anti-abuse) - reCAPTCHA v3.
-const RECAPTCHA_V3_SITE_KEY = "6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf";
+// Firebase App Check (anti-abuse) - reCAPTCHA Enterprise.
+const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfQtSstAAAAAJhirUm2O6sGFpsJ75AbwSNYvmzf";
 
 // Initialize App Check before creating Firebase service clients.
 // Do not continue if App Check cannot initialize; that would silently bypass this layer.
 initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+  provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_ENTERPRISE_SITE_KEY),
   isTokenAutoRefreshEnabled: true
 });
 

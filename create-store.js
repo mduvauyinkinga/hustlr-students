@@ -1,6 +1,5 @@
 import { auth, db } from "./firebase.js";
 import { checkStoreExists } from "./store-utils.js";
-import { upgradeToSeller } from "./roles.js";
 
 import {
   onAuthStateChanged
@@ -8,6 +7,7 @@ import {
 
 import {
   doc,
+  getDoc,
   writeBatch,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -60,6 +60,10 @@ function updateSubmitButton() {
   submitBtn.disabled = !isFormValid() || isSubmitting;
 }
 
+function redirectToPendingStoreFlow() {
+  window.location.href = "subscription.html";
+}
+
 // ── Form Validation on Input ──────────────────────────────────────
 
 function onFieldInput() {
@@ -80,14 +84,20 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Check if the user already has a store
   const hasStore = await checkStoreExists(user.uid);
   if (hasStore) {
-    window.location.href = "dashboard.html";
-    return;
+    const storeSnap = await getDoc(doc(db, "stores", user.uid));
+    const storeStatus = storeSnap.data()?.status || "pending_subscription";
+    if (storeStatus === "pending_subscription" || storeStatus === "pending") {
+      redirectToPendingStoreFlow();
+      return;
+    }
+    if (storeStatus === "active") {
+      window.location.href = "dashboard.html";
+      return;
+    }
   }
 
-  // User is authenticated and does NOT have a store — safe to create one
   currentUser = user;
   updateSubmitButton();
 });
@@ -97,16 +107,13 @@ onAuthStateChanged(auth, async (user) => {
 form?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // Guard: must be authenticated
   if (!currentUser) {
     setStatus("You must be logged in to create a store.", "error");
     return;
   }
 
-  // Guard: prevent duplicate submissions
   if (isSubmitting) return;
 
-  // Validate all required fields
   if (!isFormValid()) {
     setStatus("Please complete all required fields.", "error");
     return;
@@ -118,12 +125,9 @@ form?.addEventListener("submit", async (e) => {
   const phone = getFieldValue(phoneInput);
   const whatsapp = getFieldValue(whatsappInput);
 
-  // ── Start submission ──────────────────────────────────────────
-
   isSubmitting = true;
   updateSubmitButton();
 
-  // Show loading state on the button
   const originalBtnText = submitBtn.innerText;
   submitBtn.innerHTML = '<span class="spinner"></span> Creating Store...';
   setStatus("");
@@ -149,7 +153,7 @@ form?.addEventListener("submit", async (e) => {
       reviewCount: 0,
       ratingBreakdown: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
       isOpen: true,
-      status: "active",
+      status: "pending_subscription",
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     });
@@ -162,22 +166,9 @@ form?.addEventListener("submit", async (e) => {
 
     await batch.commit();
 
-    // ── Update user role to "seller" ────────────────────────────
-    // After successful store creation, convert the customer to a seller.
-    // Uses the centralized upgradeToSeller() from roles.js which handles
-    // Firestore update, cache refresh, and event dispatch.
-    const upgradeResult = await upgradeToSeller();
-    if (!upgradeResult.success) {
-      // If upgrade fails, roll back the store creation
-      throw new Error(upgradeResult.error || "Failed to upgrade to seller.");
-    }
-
-    // Success — redirect to dashboard
-    setStatus("Store created successfully!", "success");
-    window.location.href = "dashboard.html";
+    setStatus("Store created. Please complete the seller subscription to activate your account.", "success");
+    redirectToPendingStoreFlow();
   } catch (err) {
-    // ── Rollback: if store was created but role update failed ──
-    // Delete the store document to avoid orphan data inconsistency.
     try {
       const storeRef = doc(db, "stores", currentUser.uid);
       const privateRef = doc(db, "storePrivate", currentUser.uid);
@@ -189,7 +180,6 @@ form?.addEventListener("submit", async (e) => {
       console.error("[HUSTLR:ROLLBACK]", rollbackErr);
     }
 
-    // Friendly error message for the user
     const message =
       err?.code === "permission-denied"
         ? "You don't have permission to create a store. Please contact support."
@@ -199,7 +189,6 @@ form?.addEventListener("submit", async (e) => {
 
     setStatus(message, "error");
   } finally {
-    // Reset submission state
     isSubmitting = false;
     submitBtn.innerHTML = originalBtnText;
     updateSubmitButton();

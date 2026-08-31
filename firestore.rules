@@ -55,20 +55,11 @@ service cloud.firestore {
       allow create: if isOwner(userId) && request.resource.data.role == "customer";
 
       allow update: if (
-        isOwner(userId) && (
-          (
-            request.resource.data.role == resource.data.role &&
-            request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-              'name', 'email', 'phone', 'photoURL', 'updatedAt'
-            ])
-          ) ||
-          (
-            resource.data.role == "customer" &&
-            request.resource.data.role == "seller" &&
-            exists(/databases/$(database)/documents/stores/$(userId)) &&
-            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'updatedAt'])
-          )
-        )
+        isOwner(userId) &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name', 'email', 'phone', 'photoURL', 'updatedAt'
+        ])
       ) || isAdmin();
 
       allow delete: if isAdmin();
@@ -86,7 +77,11 @@ service cloud.firestore {
           'deliveryFee', 'rating', 'averageRating', 'reviewCount', 'ratingBreakdown',
           'openingTime', 'closingTime', 'isOpen', 'status', 'createdAt', 'updatedAt'
         ]) &&
-        request.resource.data.status == 'active';
+        request.resource.data.status == 'pending_subscription' &&
+        request.resource.data.rating == 0 &&
+        request.resource.data.averageRating == 0 &&
+        request.resource.data.reviewCount == 0 &&
+        request.resource.data.ratingBreakdown == { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
       allow update: if (
         isActiveSeller() &&
@@ -94,8 +89,7 @@ service cloud.firestore {
         request.resource.data.diff(resource.data).affectedKeys().hasOnly([
           'storeName', 'category', 'description', 'phone', 'whatsapp',
           'logoURL', 'bannerURL', 'deliveryAvailable', 'collectionAvailable',
-          'deliveryFee', 'openingTime', 'closingTime', 'isOpen', 'status',
-          'updatedAt', 'averageRating', 'reviewCount', 'ratingBreakdown', 'lastReviewOrderId'
+           'deliveryFee', 'openingTime', 'closingTime', 'isOpen', 'updatedAt'
         ])
       ) || isAdmin();
 
@@ -189,50 +183,11 @@ service cloud.firestore {
     }
 
     match /reviews/{orderId} {
-      allow read: if true;
+      allow read: if resource.data.status == 'active';
 
-      allow create: if
-        isCustomer() &&
-        request.resource.data.orderId == orderId &&
-        request.resource.data.storeId is string &&
-        request.resource.data.rating is int &&
-        request.resource.data.rating >= 1 &&
-        request.resource.data.rating <= 5 &&
-        request.resource.data.comment is string &&
-        request.resource.data.comment.size() >= 10 &&
-        request.resource.data.comment.size() <= 500 &&
-        request.resource.data.status == 'active' &&
-        exists(/databases/$(database)/documents/orders/$(orderId)) &&
-        get(/databases/$(database)/documents/orders/$(orderId)).data.status == 'completed' &&
-        get(/databases/$(database)/documents/orders/$(orderId)).data.customerId == request.auth.uid &&
-        get(/databases/$(database)/documents/orders/$(orderId)).data.storeId == request.resource.data.storeId &&
-        request.resource.data.keys().hasOnly([
-          'storeId', 'orderId', 'customerName', 'customerPhoto', 'rating', 'comment',
-          'images', 'verifiedPurchase', 'sellerReply', 'sellerReplyAt', 'status', 'createdAt', 'updatedAt'
-        ]);
+      allow create, update, delete: if false;
 
-      allow update: if signedIn() && (
-        (
-          get(/databases/$(database)/documents/reviewPrivate/$(orderId)).data.customerId == request.auth.uid &&
-          resource.data.status == 'active' &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'comment', 'status', 'updatedAt']) &&
-          request.resource.data.status == resource.data.status ||
-          (
-            resource.data.status == 'active' &&
-            request.resource.data.status == 'deleted'
-          )
-        ) ||
-        (
-          isActiveSeller() &&
-          get(/databases/$(database)/documents/reviewPrivate/$(orderId)).data.sellerId == request.auth.uid &&
-          resource.data.storeId == request.auth.uid &&
-          resource.data.status == 'active' &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sellerReply', 'sellerReplyAt', 'updatedAt'])
-        ) ||
-        isAdmin()
-      );
-
-      allow delete: if isAdmin();
+      allow update, delete: if false;
     }
 
     match /reviewPrivate/{orderId} {
@@ -242,31 +197,9 @@ service cloud.firestore {
         isAdmin()
       );
 
-      allow create: if
-        isCustomer() &&
-        request.resource.data.customerId == request.auth.uid &&
-        request.resource.data.sellerId == get(/databases/$(database)/documents/orders/$(orderId)).data.storeId &&
-        request.resource.data.orderId == orderId &&
-        request.resource.data.keys().hasOnly(['customerId', 'sellerId', 'orderId', 'verifiedPurchase', 'status', 'createdAt', 'updatedAt']) &&
-        exists(/databases/$(database)/documents/orders/$(orderId)) &&
-        get(/databases/$(database)/documents/orders/$(orderId)).data.status == 'completed' &&
-        get(/databases/$(database)/documents/orders/$(orderId)).data.customerId == request.auth.uid;
+      allow create, update, delete: if false;
 
-      allow update: if signedIn() && (
-        (
-          resource.data.customerId == request.auth.uid &&
-          request.resource.data.customerId == resource.data.customerId &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
-        ) ||
-        (
-          isActiveSeller() &&
-          resource.data.sellerId == request.auth.uid &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['updatedAt'])
-        ) ||
-        isAdmin()
-      );
-
-      allow delete: if isAdmin();
+      allow update, delete: if false;
     }
 
     match /sellerSubscriptionPublic/{userId} {
@@ -275,6 +208,10 @@ service cloud.firestore {
     }
 
     match /sellerSubscriptions/{userId} {
+      allow read, write: if false;
+    }
+
+    match /paypalSubscriptionIntents/{intentToken} {
       allow read, write: if false;
     }
 
