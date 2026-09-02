@@ -16,7 +16,8 @@ const htmlFiles = [
   "products.html",
   "safety.html",
   "seller-orders.html",
-  "store.html"
+  "store.html",
+  "subscription.html"
 ];
 
 const voidElements = new Set([

@@ -9,9 +9,17 @@
   <!-- reCAPTCHA Enterprise is required by Firebase App Check (enforced on all Cloud Functions callables). -->
 </head>
 <body>
-  <nav>
+  <nav class="nav-mobile-toggle">
     <div class="brand"><img class="brand-logo" src="assets/hustlr-logo.png" width="34" height="34" alt="HUSTLR Logo"><h1>HUSTLR</h1></div>
-    <div><a href="dashboard.html">Dashboard</a><a href="auth.html" id="authLink">Login</a></div>
+
+    <!-- Hamburger button — visible on mobile only; toggles the .nav-links menu below -->
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-links" id="navLinks"><a href="dashboard.html">Dashboard</a><a href="auth.html" id="authLink">Login</a></div>
   </nav>
 
   <main class="subscription-shell">
@@ -39,5 +47,6 @@
   </main>
   <script src="paypal-config.js"></script>
   <script type="module" src="subscription.js"></script>
+  <script type="module" src="nav.js"></script>
 </body>
 </html>

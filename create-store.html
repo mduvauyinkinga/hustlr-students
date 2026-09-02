@@ -13,7 +13,7 @@
 <body>
 
   <!-- NAV -->
-  <nav>
+  <nav class="nav-mobile-toggle">
     <div class="brand">
       <picture>
         <source type="image/webp" srcset="assets/hustlr-logo.png">
@@ -22,17 +22,24 @@
       <h1>HUSTLR</h1>
     </div>
 
-  <div>
-      <a href="index.html">Home</a>
-      <a href="discover.html">Discover</a>
-      <a href="browse-stores.html">Browse Stores</a>
-      <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
-      <a href="dashboard.html">Dashboard</a>
-      <span id="sellerNavLinks" style="display:none;"></span>
-      <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
-      <a href="safety.html">Safety</a>
-      <a href="auth.html" id="authLink">Login</a>
-    </div>
+  <!-- Hamburger button — visible on mobile only; toggles the .nav-links menu below -->
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="nav-links" id="navLinks">
+    <a href="index.html">Home</a>
+    <a href="discover.html">Discover</a>
+    <a href="browse-stores.html">Browse Stores</a>
+    <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+    <a href="dashboard.html">Dashboard</a>
+    <span id="sellerNavLinks" style="display:none;"></span>
+    <a href="create-store.html" id="becomeSellerLink" style="display:none;">Become a Seller</a>
+    <a href="safety.html">Safety</a>
+    <a href="auth.html" id="authLink">Login</a>
+  </div>
   </nav>
 
   <!-- CREATE STORE SECTION -->
