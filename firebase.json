@@ -1,4 +1,38 @@
 {
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      ".gitignore",
+      "**/.*",
+      "git/**",
+      "server/**",
+      "functions/**",
+      "**/node_modules/**",
+      "package.json",
+      "package-lock.json",
+      "TODO.md",
+      "css-check.js",
+      "html-check.js",
+      "firebase-debug.log",
+      "**/*.mp4"
+    ],
+    "headers": [
+      {
+        "source": "**/*.html",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "**/*.@(css|js)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|png|webp|ico|svg)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      }
+    ]
+  },
   "functions": {
     "source": "functions",
     "runtime": "nodejs22"

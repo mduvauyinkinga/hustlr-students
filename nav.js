@@ -180,6 +180,54 @@ onAuthStateChanged(auth, async (user) => {
 // ── Inject Discover link into the nav ──────────────────────────────
 ensureDiscoverLink();
 
+// ── Mobile Menu Toggle ─────────────────────────────────────────────
+
+/**
+ * Wire up the hamburger button for pages with a collapsible nav
+ * (e.g. index.html).
+ *
+ * - Toggles .open on the #navLinks container (shows/hides the menu)
+ * - Toggles .active on the button (animates the icon into an X)
+ * - Keeps aria-expanded in sync for screen readers
+ * - Closes the menu when a link inside is clicked or when tapping outside
+ *
+ * Idempotent / safe no-op on pages that don't have the toggle yet.
+ */
+function setupMobileMenuToggle() {
+  const toggle = document.getElementById("menuToggle");
+  const links = document.getElementById("navLinks");
+  if (!toggle || !links) return;
+
+  const setOpen = (open) => {
+    links.classList.toggle("open", open);
+    toggle.classList.toggle("active", open);
+    toggle.setAttribute("aria-expanded", String(open));
+  };
+
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setOpen(!links.classList.contains("open"));
+  });
+
+  // Close the menu after a link inside it is clicked (e.g. navigating)
+  links.addEventListener("click", (e) => {
+    if (e.target.closest("a")) setOpen(false);
+  });
+
+  // Close when tapping anywhere outside the nav
+  document.addEventListener("click", (e) => {
+    if (
+      links.classList.contains("open") &&
+      !links.contains(e.target) &&
+      !toggle.contains(e.target)
+    ) {
+      setOpen(false);
+    }
+  });
+}
+
+setupMobileMenuToggle();
+
 window.addEventListener("roleChanged", async (event) => {
   const { role } = event.detail || {};
 

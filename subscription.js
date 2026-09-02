@@ -29,6 +29,7 @@ function renderStatus(data) {
   };
 
   statusBadge.textContent = labels[state] || state;
+  statusBadge.dataset.state = state.toLowerCase();
   statusText.textContent = state === "ACTIVE"
     ? "Your seller subscription has been verified by Hustlr."
     : state === "APPROVAL_PENDING"

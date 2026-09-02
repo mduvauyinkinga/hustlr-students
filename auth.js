@@ -182,6 +182,46 @@ function setAuthButtonsDisabled(disabled) {
   if (loginBtn) loginBtn.disabled = disabled;
 }
 
+// FORGOT PASSWORD
+// Sends a password reset email using the address typed into the email field.
+function wireForgotPasswordLink() {
+  const link = document.getElementById("forgotPasswordLink");
+  if (!link) return;
+
+  link.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const statusEl = document.getElementById("status");
+    const emailEl = document.getElementById("email");
+    const email = emailEl ? emailEl.value.trim() : "";
+
+    if (!email) {
+      statusEl.innerText = "Enter your email above first, then tap Forgot Password.";
+      return;
+    }
+
+    link.textContent = "Sending...";
+    try {
+      await sendPasswordResetEmail(auth, email);
+      statusEl.innerText = "Password reset email sent. Check your inbox (and spam folder).";
+    } catch (err) {
+      const resetErrorMessages = {
+        "auth/invalid-email": "That email address doesn't look valid.",
+        "auth/user-not-found": "No account found with that email address.",
+        "auth/too-many-requests": "Too many attempts. Please try again in a little while."
+      };
+      statusEl.innerText =
+        resetErrorMessages[err?.code] ||
+        "Couldn't send the reset email right now. Please try again.";
+      console.error("[HUSTLR:PASSWORD_RESET]", err?.code || err);
+    } finally {
+      link.textContent = "Forgot Password?";
+    }
+  });
+}
+
+wireForgotPasswordLink();
+
 // SIGN UP
 window.signup = async function () {
   const { email, password } = getEmailAndPassword();

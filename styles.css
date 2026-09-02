@@ -81,6 +81,96 @@ nav > div:last-child {
   }
 }
 
+/* ── Mobile hamburger menu (collapsible nav, e.g. index.html) ────── */
+
+/* Hamburger button — hidden on desktop */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  flex-shrink: 0;
+  width: 42px;
+  height: 36px;
+  padding: 6px;
+  background: transparent;
+  border: 1px solid #2a0f18;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.menu-toggle:hover span {
+  background: #b1123a;
+}
+
+/* Animate the icon into an X while the menu is open */
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  /* Keep brand + hamburger on one row */
+  nav.nav-mobile-toggle {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  nav.nav-mobile-toggle .menu-toggle {
+    display: flex;
+  }
+
+  /* Links hidden until the toggle is clicked */
+  nav.nav-mobile-toggle .nav-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #2a0f18;
+  }
+
+  nav.nav-mobile-toggle .nav-links.open {
+    display: flex;
+  }
+
+  nav.nav-mobile-toggle .nav-links a {
+    margin: 0;
+    padding: 10px 8px;
+    font-size: 15px;
+    border-radius: 6px;
+  }
+
+  nav.nav-mobile-toggle .nav-links a:hover {
+    background: #1d1016;
+  }
+
+  /* Seller links injected by nav.js stack vertically too */
+  nav.nav-mobile-toggle .nav-links #sellerNavLinks a {
+    display: block;
+  }
+}
+
 /* HERO */
 .hero {
   text-align: center;

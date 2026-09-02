@@ -1,0 +1,235 @@
+/* ════════════════════════════════════════════════════════════
+   subscription.css — Seller Subscription page styles
+   Loaded only by subscription.html.
+   Design tokens match styles.css (dark theme, brand #b1123a).
+   ════════════════════════════════════════════════════════════ */
+
+.subscription-shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── Page header ─────────────────────────────────────────── */
+.subscription-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #b1123a;
+  background: rgba(177, 18, 58, 0.12);
+  border: 1px solid rgba(177, 18, 58, 0.35);
+  border-radius: 999px;
+  padding: 4px 14px;
+  margin-bottom: 14px;
+}
+
+.subscription-header h2 {
+  font-size: 32px;
+  color: #ffffff;
+}
+
+.subscription-header p {
+  color: #bbb;
+  max-width: 640px;
+  margin: 10px auto 0;
+}
+
+/* ── Shared text helpers ─────────────────────────────────── */
+.muted {
+  color: #888;
+  font-size: 14px;
+}
+
+/* ── Panels (status + plans sections render as cards) ────── */
+.subscription-panel,
+.subscription-shell section:not(.subscription-header) {
+  background: #1a1a1d;
+  border: 1px solid #2a2a2e;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.panel-heading h3,
+.section-heading h3 {
+  color: #b1123a;
+  font-size: 20px;
+}
+
+.subscription-panel > p {
+  color: #ccc;
+}
+
+/* ── Status badge (color set via data-state from JS) ─────── */
+.status-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #2a2a2e;
+  color: #ccc;
+  border: 1px solid #3a3a3f;
+  white-space: nowrap;
+}
+
+.status-badge[data-state="active"] {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.status-badge[data-state="approval_pending"] {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.status-badge[data-state="suspended"],
+.status-badge[data-state="expired"] {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.status-badge[data-state="cancelled"],
+.status-badge[data-state="not_subscribed"] {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+  border-color: rgba(107, 114, 128, 0.4);
+}
+
+/* ── Secondary button (Cancel subscription) ──────────────── */
+.btn.secondary {
+  background: #2a2a2e;
+  color: #fff;
+  border: 1px solid #3a3a3f;
+  margin-top: 16px;
+}
+
+.btn.secondary:hover {
+  background: #3a3a3f;
+}
+
+/* ── Plan cards ──────────────────────────────────────────── */
+.section-heading {
+  margin-bottom: 16px;
+}
+
+.section-heading .muted {
+  margin-top: 4px;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.plan-card {
+  position: relative;
+  background: #1a1a1d;
+  border: 1px solid #2a2a2e;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.plan-card:hover {
+  border-color: #b1123a;
+  transform: translateY(-2px);
+}
+
+.plan-card.featured {
+  border-color: #b1123a;
+  box-shadow: 0 0 0 1px rgba(177, 18, 58, 0.35), 0 12px 30px rgba(177, 18, 58, 0.12);
+}
+
+.plan-card.featured::before {
+  content: "Recommended";
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: #b1123a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.plan-card h4 {
+  color: #fff;
+  font-size: 20px;
+}
+
+.plan-price {
+  color: #b1123a;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.plan-card p:not(.plan-price) {
+  color: #ccc;
+  font-size: 14px;
+}
+
+.plan-button {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.plan-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* PayPal buttons container injected in place of the clicked plan button */
+.plan-card > div {
+  margin-top: 12px;
+}
+
+/* ── Status message line ─────────────────────────────────── */
+.subscription-message {
+  text-align: center;
+  min-height: 24px;
+  color: #f59e0b;
+  font-size: 14px;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .subscription-shell {
+    padding: 24px 16px 60px;
+  }
+
+  .subscription-header h2 {
+    font-size: 26px;
+  }
+
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+}

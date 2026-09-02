@@ -13,7 +13,8 @@ const cssFiles = [
   "store.css",
   "browse-stores.css",
   "discover.css",
-  "product-details.css"
+  "product-details.css",
+  "subscription.css"
 ];
 
 let errors = 0;
